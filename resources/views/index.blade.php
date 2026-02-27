@@ -43,7 +43,7 @@
                 <!-- Sisi Kanan: Menu Navigasi (Desktop) -->
                 <div class="hidden lg:flex items-center space-x-6 text-sm font-semibold">
                     <a href="{{ route('donasi.index') }}" class="text-maroon-100 hover:text-amber-400 transition">Donasi</a>
-                    <a href="#" class="text-maroon-100 hover:text-amber-400 transition">Event</a>
+                    <a href="{{ route('event.index') }}" class="text-maroon-100 hover:text-amber-400 transition">Event</a>
                     <a href="#" class="text-maroon-100 hover:text-amber-400 transition">Zakat</a>
                     <a href="#" class="text-maroon-100 hover:text-amber-400 transition">Galang Dana</a>
                     @auth
@@ -84,7 +84,7 @@
              class="lg:hidden bg-maroon-900 border-t border-maroon-700 overflow-hidden shadow-2xl">
             <div class="px-4 pt-2 pb-6 space-y-2">
                 <a href="{{ route('donasi.index') }}" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium">Donasi</a>
-                <a href="#" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium">Event</a>
+                <a href="{{ route('event.index') }}" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium">Event</a>
                 <a href="#" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium">Zakat</a>
                 <a href="#" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium">Galang Dana</a>
                 <div class="pt-4 space-y-3">

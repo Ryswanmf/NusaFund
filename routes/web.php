@@ -16,6 +16,15 @@ Route::get('/donasi/{id}', function ($id) {
     return view('landing_page.donasi.show');
 })->name('donasi.show');
 
+Route::get('/event', function () {
+    return view('landing_page.event.index');
+})->name('event.index');
+
+Route::get('/event/{id}', function ($id) {
+    // Sementara menggunakan view statis untuk demo
+    return view('landing_page.event.show');
+})->name('event.show');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
