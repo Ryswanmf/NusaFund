@@ -25,6 +25,10 @@ Route::get('/event/{id}', function ($id) {
     return view('landing_page.event.show');
 })->name('event.show');
 
+Route::get('/zakat', function () {
+    return view('landing_page.zakat.index');
+})->name('zakat.index');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
