@@ -210,7 +210,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                 <div class="max-w-xl">
-                    <h2 class="text-3xl md:text-4xl font-black text-zinc-900 mb-4 tracking-tight">Donasi Mendesak</h2>
+                    <h2 class="text-3xl md:text-4xl font-black text-zinc-900 mb-4 tracking-tight">Donasi <span class="text-maroon-700">Mendesak</span></h2>
                     <p class="text-zinc-500 text-lg">Waktu sangat berharga bagi mereka. Ulurkan tangan Anda sekarang untuk campaign di bawah ini.</p>
                 </div>
                 <a href="{{ route('donasi.index') }}" class="inline-flex items-center gap-2 text-maroon-700 font-bold hover:gap-4 transition-all group">
@@ -220,112 +220,52 @@
             </div>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-                <!-- Campaign Card 1 -->
+                @forelse($urgentCampaigns as $camp)
                 <div class="bg-white rounded-[2.5rem] overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col h-full group">
                     <div class="relative overflow-hidden aspect-[16/10]">
-                        <img src="https://images.unsplash.com/photo-1532629345422-7515f3d16bb8?q=80&w=1470&auto=format&fit=crop" alt="Campaign 1" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                        @if($camp->image)
+                            <img src="{{ asset('storage/' . $camp->image) }}" alt="{{ $camp->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                        @else
+                            <div class="w-full h-full bg-zinc-100 flex items-center justify-center text-zinc-400 font-bold tracking-tighter text-2xl">NusaFund</div>
+                        @endif
                         <div class="absolute top-5 left-5">
-                            <span class="bg-maroon-600/90 backdrop-blur-md text-white text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">Mendesak</span>
+                            <span class="bg-maroon-600/90 backdrop-blur-md text-white text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">{{ $camp->is_urgent ? 'Mendesak' : $camp->category }}</span>
                         </div>
                     </div>
                     <div class="p-8 flex flex-col flex-1">
-                        <a href="{{ route('donasi.show', 1) }}" class="group/title">
-                            <h3 class="text-xl font-bold text-zinc-900 mb-4 line-clamp-2 group-hover/title:text-maroon-700 transition">Bantu Renovasi Sekolah Dasar di Pelosok NTT</h3>
+                        <a href="{{ route('donasi.show', $camp->slug) }}" class="group/title">
+                            <h3 class="text-xl font-bold text-zinc-900 mb-4 line-clamp-2 group-hover/title:text-maroon-700 transition">{{ $camp->title }}</h3>
                         </a>
                         
                         <div class="mt-auto space-y-4">
                             <div>
                                 <div class="flex justify-between text-sm mb-2 font-semibold">
                                     <span class="text-zinc-400 uppercase tracking-wider text-[10px]">Terkumpul</span>
-                                    <span class="text-maroon-700 font-black">Rp 45.000.000</span>
+                                    <span class="text-maroon-700 font-black">Rp {{ number_format($camp->collected_amount, 0, ',', '.') }}</span>
                                 </div>
                                 <div class="w-full bg-zinc-100 h-3 rounded-full overflow-hidden">
-                                    <div class="bg-maroon-600 h-full rounded-full transition-all duration-1000" style="width: 75%"></div>
+                                    @php $percent = ($camp->collected_amount / $camp->target_amount) * 100; @endphp
+                                    <div class="bg-maroon-600 h-full rounded-full transition-all duration-1000" style="width: {{ min($percent, 100) }}%"></div>
                                 </div>
                             </div>
                             <div class="flex justify-between items-center text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                <span class="text-maroon-600">75% Tercapai</span>
+                                <span class="text-maroon-600">{{ round($percent) }}% Tercapai</span>
                                 <span class="flex items-center gap-1.5 bg-zinc-50 px-3 py-1 rounded-full">
                                     <svg class="w-3 h-3 text-maroon-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    12 Hari Lagi
+                                    {{ now()->diffInDays($camp->end_date) }} Hari Lagi
                                 </span>
                             </div>
-                            <a href="{{ route('donasi.show', 1) }}" class="block w-full text-center mt-4 bg-maroon-50 text-maroon-700 hover:bg-maroon-700 hover:text-white py-4 rounded-2xl font-black transition-all duration-300 transform active:scale-95">
+                            <a href="{{ route('donasi.show', $camp->slug) }}" class="block w-full text-center mt-4 bg-maroon-50 text-maroon-700 hover:bg-maroon-700 hover:text-white py-4 rounded-2xl font-black transition-all duration-300 transform active:scale-95">
                                 Donasi Sekarang
                             </a>
                         </div>
                     </div>
                 </div>
-
-                <!-- Campaign Card 2 -->
-                <div class="bg-white rounded-[2.5rem] overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col h-full group">
-                    <div class="relative overflow-hidden aspect-[16/10]">
-                        <img src="https://images.unsplash.com/photo-1542884748-2b87b36c6b90?q=80&w=1470&auto=format&fit=crop" alt="Campaign 2" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
-                        <div class="absolute top-5 left-5">
-                            <span class="bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">Pangan</span>
-                        </div>
-                    </div>
-                    <div class="p-8 flex flex-col flex-1">
-                        <h3 class="text-xl font-bold text-zinc-900 mb-4 line-clamp-2 group-hover:text-maroon-700 transition">Sedekah Makanan untuk Lansia Terlantar</h3>
-                        
-                        <div class="mt-auto space-y-4">
-                            <div>
-                                <div class="flex justify-between text-sm mb-2 font-semibold">
-                                    <span class="text-zinc-400 uppercase tracking-wider text-[10px]">Terkumpul</span>
-                                    <span class="text-maroon-700 font-black">Rp 12.800.000</span>
-                                </div>
-                                <div class="w-full bg-zinc-100 h-3 rounded-full overflow-hidden">
-                                    <div class="bg-maroon-600 h-full rounded-full transition-all duration-1000" style="width: 32%"></div>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                <span class="text-maroon-600">32% Tercapai</span>
-                                <span class="flex items-center gap-1.5 bg-zinc-50 px-3 py-1 rounded-full">
-                                    <svg class="w-3 h-3 text-maroon-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    5 Hari Lagi
-                                </span>
-                            </div>
-                            <a href="#" class="block w-full text-center mt-4 bg-maroon-50 text-maroon-700 hover:bg-maroon-700 hover:text-white py-4 rounded-2xl font-black transition-all duration-300 transform active:scale-95">
-                                Donasi Sekarang
-                            </a>
-                        </div>
-                    </div>
+                @empty
+                <div class="col-span-full py-20 text-center">
+                    <p class="text-zinc-400 font-medium">Belum ada kampanye aktif saat ini.</p>
                 </div>
-
-                <!-- Campaign Card 3 -->
-                <div class="bg-white rounded-[2.5rem] overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col h-full group">
-                    <div class="relative overflow-hidden aspect-[16/10]">
-                        <img src="https://images.unsplash.com/photo-1518391846015-55a9cc003b25?q=80&w=1470&auto=format&fit=crop" alt="Campaign 3" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
-                        <div class="absolute top-5 left-5">
-                            <span class="bg-orange-600/90 backdrop-blur-md text-white text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">Bencana</span>
-                        </div>
-                    </div>
-                    <div class="p-8 flex flex-col flex-1">
-                        <h3 class="text-xl font-bold text-zinc-900 mb-4 line-clamp-2 group-hover:text-maroon-700 transition">Tanggap Darurat: Bantuan Banjir Bandang Luwu</h3>
-                        
-                        <div class="mt-auto space-y-4">
-                            <div>
-                                <div class="flex justify-between text-sm mb-2 font-semibold">
-                                    <span class="text-zinc-400 uppercase tracking-wider text-[10px]">Terkumpul</span>
-                                    <span class="text-maroon-700 font-black">Rp 89.200.000</span>
-                                </div>
-                                <div class="w-full bg-zinc-100 h-3 rounded-full overflow-hidden">
-                                    <div class="bg-maroon-600 h-full rounded-full transition-all duration-1000" style="width: 90%"></div>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                <span class="text-maroon-600">90% Tercapai</span>
-                                <span class="flex items-center gap-1.5 bg-zinc-50 px-3 py-1 rounded-full">
-                                    <svg class="w-3 h-3 text-maroon-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    2 Hari Lagi
-                                </span>
-                            </div>
-                            <a href="#" class="block w-full text-center mt-4 bg-maroon-50 text-maroon-700 hover:bg-maroon-700 hover:text-white py-4 rounded-2xl font-black transition-all duration-300 transform active:scale-95">
-                                Donasi Sekarang
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>

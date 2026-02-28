@@ -78,6 +78,30 @@ class CampaignController extends Controller
         return redirect()->route('admin.donasi.index')->with('success', 'Kampanye berhasil dihapus!');
     }
 
+    // Fungsi untuk Halaman Beranda
+    public function publicHome()
+    {
+        // Ambil kampanye yang mendesak, atau yang terbaru jika tidak ada yang mendesak
+        $urgentCampaigns = Campaign::where('status', 'active')
+            ->where('is_urgent', true)
+            ->latest()
+            ->take(3)
+            ->get();
+
+        // Jika kampanye mendesak kurang dari 3, ambil dari kampanye terbaru lainnya
+        if ($urgentCampaigns->count() < 3) {
+            $otherCampaigns = Campaign::where('status', 'active')
+                ->where('is_urgent', false)
+                ->latest()
+                ->take(3 - $urgentCampaigns->count())
+                ->get();
+            
+            $urgentCampaigns = $urgentCampaigns->concat($otherCampaigns);
+        }
+
+        return view('index', compact('urgentCampaigns'));
+    }
+
     // Fungsi untuk Landing Page
     public function publicIndex()
     {
