@@ -4,6 +4,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\HeroBannerController;
 use App\Http\Controllers\FundraisingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportController;
@@ -62,7 +63,9 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::resource('donasi', CampaignController::class);
     Route::resource('event', EventController::class);
     Route::resource('zakat', ZakatController::class);
+    Route::resource('hero', HeroBannerController::class);
     Route::resource('testimoni', TestimonialController::class);
+    Route::resource('donatur', \App\Http\Controllers\UserController::class)->parameters(['donatur' => 'donatur']);
     Route::resource('kategori', CategoryController::class)->parameters(['kategori' => 'category']);
     Route::resource('bantuan', SupportController::class)->parameters(['bantuan' => 'dukungan']);
     Route::resource('syarat-ketentuan', \App\Http\Controllers\TermController::class);
@@ -77,6 +80,11 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     });
 
     Route::controller(AboutController::class)->prefix('tentang-kami')->name('about.')->group(function () {
+        Route::get('/', 'edit')->name('edit');
+        Route::put('/', 'update')->name('update');
+    });
+
+    Route::controller(\App\Http\Controllers\SettingController::class)->prefix('pengaturan')->name('settings.')->group(function () {
         Route::get('/', 'edit')->name('edit');
         Route::put('/', 'update')->name('update');
     });

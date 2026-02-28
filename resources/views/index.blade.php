@@ -9,33 +9,17 @@
                 activeSlide: 1,
                 timer: null,
                 slides: [
+                    @foreach($banners as $b)
                     {
-                        id: 1,
-                        tag: '#IndonesiaBerbagi',
-                        title: 'Wujudkan <span class=\'text-amber-400\'>Perubahan</span> Lewat Kebaikan Anda',
-                        desc: 'Gabung bersama 12.000+ donatur lainnya untuk membantu sesama melalui donasi, zakat, dan aksi sosial yang transparan.',
-                        image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1470&auto=format&fit=crop',
-                        cta: 'Mulai Berdonasi',
-                        link: '{{ route('donasi.index') }}'
+                        id: {{ $loop->iteration }},
+                        tag: '{{ $b->tag }}',
+                        title: '{!! $b->title !!}',
+                        desc: '{{ $b->description }}',
+                        image: '{{ filter_var($b->image, FILTER_VALIDATE_URL) ? $b->image : asset('storage/' . $b->image) }}',
+                        cta: '{{ $b->cta_text }}',
+                        link: '{{ $b->cta_link }}'
                     },
-                    {
-                        id: 2,
-                        tag: '#PendidikanUntukSemua',
-                        title: 'Bantu <span class=\'text-amber-400\'>Anak Bangsa</span> Meraih Cita-Cita',
-                        desc: 'Ribuan anak di pelosok negeri menanti uluran tangan Anda untuk mendapatkan fasilitas pendidikan yang layak.',
-                        image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1470&auto=format&fit=crop',
-                        cta: 'Lihat Program',
-                        link: '{{ route('donasi.index') }}'
-                    },
-                    {
-                        id: 3,
-                        tag: '#RelawanNusantara',
-                        title: 'Jadilah <span class=\'text-amber-400\'>Relawan</span> Aksi Sosial Nyata',
-                        desc: 'Jangan hanya berdonasi, terjun langsung ke lapangan dan rasakan kebahagiaan saat membantu sesama.',
-                        image: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=1473&auto=format&fit=crop',
-                        cta: 'Ikuti Event',
-                        link: '{{ route('event.index') }}'
-                    }
+                    @endforeach
                 ],
                 next() { 
                     this.activeSlide = this.activeSlide === this.slides.length ? 1 : this.activeSlide + 1 

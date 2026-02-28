@@ -1,43 +1,95 @@
-# NusaFund - Kebaikan untuk Semua
+# NusaFund - Platform Kebaikan & Filantropi Modern
 
-NusaFund adalah platform penggalangan dana (crowdfunding) yang transparan dan terpercaya, dibangun dengan Laravel 12 dan TailwindCSS. Platform ini dirancang untuk menghubungkan para donatur dengan berbagai program kemanusiaan, sosial, dan keagamaan di Indonesia.
+![Laravel](https://img.shields.io/badge/laravel-%23FF2D20.svg?style=for-the-badge&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/php-%23777BB1.svg?style=for-the-badge&logo=php&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Alpine.js](https://img.shields.io/badge/alpine.js-%238BC0D0.svg?style=for-the-badge&logo=alpine.js&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-%234479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
 
-## 🚀 Update Terkini (27 Februari 2026)
+NusaFund adalah platform penggalangan dana (crowdfunding), pengelolaan zakat, dan aksi sosial yang dirancang dengan antarmuka modern, transparan, dan sepenuhnya dinamis. Dibangun menggunakan teknologi terbaru Laravel 12, TailwindCSS, dan Alpine.js.
 
-Berikut adalah daftar perubahan dan fitur baru yang telah diimplementasikan:
+## Tech Stack
 
-### 🎨 UI/UX & Landing Page
-- **Redesain Beranda**: Mengalihkan rute utama ke landing page kustom yang lebih modern dan informatif.
-- **Konfigurasi Branding**: Menambahkan palet warna `maroon` (#800000) dan font `Instrument Sans` ke dalam sistem TailwindCSS.
-- **Pembersihan Kode**: Menghapus *inline styles* dan menggantinya dengan class Tailwind murni untuk performa dan kemudahan pemeliharaan.
-- **Navigasi Responsif**: Navbar yang mendukung status login (Auth) dan tombol registrasi yang adaptif di desktop maupun mobile.
-- **FAQ Interaktif**: Bagian tanya jawab dengan transisi halus menggunakan Alpine.js.
-
-### 💰 Fitur Donasi
-- **Listing Campaign**: Halaman daftar donasi (`/donasi`) dengan grid kartu yang informatif, menampilkan progres, kategori, dan sisa waktu.
-- **Detail Campaign**: Halaman detail donasi (`/donasi/{id}`) yang komprehensif, mencakup:
-    - Widget donasi *sticky* untuk kemudahan akses.
-    - Sistem Tab (Cerita, Update, Donatur) berbasis Alpine.js.
-    - Informasi penggalang dana terverifikasi.
-    - Integrasi berbagi ke media sosial (FB, Twitter, WA).
-
-### 🛠️ Infrastruktur & Keamanan
-- **Integrasi Rute**: Penambahan rute `/donasi` dan `/donasi/{id}` yang terhubung secara dinamis.
-- **Keamanan**: Implementasi sistem autentikasi Laravel Breeze (Login, Register, Profile) yang sudah diselaraskan dengan desain NusaFund.
-
-## 🛠️ Tech Stack
-- **Framework**: Laravel 12
-- **Frontend**: TailwindCSS, Alpine.js, Blade Templating
-- **Icons**: SVG Icons (Custom & Heroicons)
+- **Backend**: Laravel 12 (PHP 8.3+)
+- **Frontend**: TailwindCSS (Custom Theme), Alpine.js, Blade Templating
+- **Database**: MySQL / MariaDB
+- **Authentication**: Laravel Breeze (Customized UI)
 - **Asset Manager**: Vite
 
-## 🏁 Cara Menjalankan Proyek
-1. Clone repository
-2. Jalankan `composer install`
-3. Jalankan `npm install`
-4. Setup `.env` dan `php artisan key:generate`
-5. Jalankan `php artisan migrate`
-6. Jalankan `npm run dev` dan `php artisan serve`
+## Fitur Utama
+
+### Halaman Publik (Landing Page)
+- **Hero Slider Dinamis**: Banner utama otomatis yang dapat dikelola dari Admin Panel.
+- **Kalkulator Zakat**: Hitung kewajiban Zakat Profesi & Maal secara real-time sesuai syariat.
+- **Manajemen Campaign**: Daftar donasi murni dari database dengan kategori dan progres bar otomatis.
+- **Sistem Event**: Pendaftaran relawan dan aksi sosial dengan informasi kuota dan lokasi.
+- **Pusat Bantuan (FAQ)**: Dokumentasi tanya jawab interaktif untuk memudahkan pengguna.
+- **Profil Organisasi**: Halaman Tentang Kami yang dinamis mencakup Visi, Misi, dan Legalitas.
+- **Legalitas & Keamanan**: Halaman Syarat & Ketentuan serta Kebijakan Privasi yang dapat diatur oleh Admin.
+
+### Dashboard Admin (Eksklusif)
+Dashboard kustom untuk kontrol penuh tanpa library pihak ketiga:
+- **Statistik Ringkas**: Pantau total donasi, jumlah donatur, dan performa campaign.
+- **CRUD Kategori**: Kelola kategori kebaikan dengan ikon SVG Heroicons.
+- **CRUD Campaign & Event**: Manajemen konten penggalangan dana dan aksi sosial.
+- **CRUD Zakat**: Kelola program penyaluran zakat produktif.
+- **Verifikasi Galang Dana**: Menyetujui atau menolak pengajuan dana dari masyarakat.
+- **Manajemen User**: Pantau data donatur dan atur hak akses (Admin/User).
+- **Pengaturan Website**: Ubah Link Sosial Media, Alamat, Email, dan Copyright secara global.
+
+## Panduan Instalasi
+
+### 1. Persiapan
+Pastikan sistem telah terpasang Composer, Node.js, dan web server (XAMPP/Laragon).
+
+### 2. Clone & Install Dependencies
+```bash
+git clone https://github.com/username/nusafund.git
+cd NusaFund
+composer install
+npm install
+```
+
+### 3. Konfigurasi Lingkungan
+Salin file konfigurasi lingkungan dan atur koneksi database.
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 4. Database & Link Storage
+Jalankan migrasi untuk membuat tabel dan buat link storage untuk aset gambar.
+```bash
+php artisan migrate --seed
+php artisan storage:link
+```
+*Catatan: Perintah seed akan mengisi data awal termasuk akun administrator.*
+
+### 5. Jalankan Aplikasi
+```bash
+# Jalankan server Laravel
+php artisan serve
+
+# Jalankan Vite (di terminal terpisah)
+npm run dev
+```
+
+## Kredensial Akses (Development)
+
+Untuk masuk ke Dashboard Admin, gunakan akun default berikut:
+- **URL Login**: /login
+- **Email**: admin@nusafund.com
+- **Password**: password123
+
+## Struktur Folder Utama
+- **app/Http/Controllers**: Logika bisnis dan integrasi data.
+- **resources/views/landing_page**: Kumpulan view halaman publik.
+- **resources/views/admin**: Kumpulan view dashboard pengelolaan.
+- **resources/views/layouts**: Template utama (Admin & Landing).
+- **routes/web.php**: Seluruh pengaturan rute yang terorganisir.
+
+## Kontak & Dukungan
+Jika terdapat pertanyaan terkait pengembangan platform ini, silakan hubungi tim IT NusaFund melalui email: kontak@nusafund.id.
 
 ---
-© 2026 NusaFund Indonesia.
+Copyright 2026 NusaFund Indonesia. Kebaikan untuk Semua.

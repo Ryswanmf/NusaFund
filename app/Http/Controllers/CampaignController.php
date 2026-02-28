@@ -81,6 +81,9 @@ class CampaignController extends Controller
     // Fungsi untuk Halaman Beranda
     public function publicHome()
     {
+        // Ambil data banner slider
+        $banners = \App\Models\HeroBanner::where('is_active', true)->orderBy('order')->get();
+
         // Ambil data profil/settings
         $about = \App\Models\About::first();
 
@@ -108,7 +111,7 @@ class CampaignController extends Controller
             $urgentCampaigns = $urgentCampaigns->concat($otherCampaigns);
         }
 
-        return view('index', compact('urgentCampaigns', 'categories', 'testimonials', 'about'));
+        return view('index', compact('urgentCampaigns', 'categories', 'testimonials', 'about', 'banners'));
     }
 
     // Fungsi untuk Landing Page
