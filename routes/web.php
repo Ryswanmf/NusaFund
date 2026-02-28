@@ -1,80 +1,90 @@
 <?php
 
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\FundraisingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SupportController;
+use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\ZakatController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [\App\Http\Controllers\CampaignController::class, 'publicHome'])->name('home');
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/donasi', [\App\Http\Controllers\CampaignController::class, 'publicIndex'])->name('donasi.index');
-Route::get('/donasi/{slug}', [\App\Http\Controllers\CampaignController::class, 'publicShow'])->name('donasi.show');
+Route::get('/', [CampaignController::class, 'publicHome'])->name('home');
 
-Route::get('/event', [\App\Http\Controllers\EventController::class, 'publicIndex'])->name('event.index');
-Route::get('/event/{slug}', [\App\Http\Controllers\EventController::class, 'publicShow'])->name('event.show');
+// Donasi
+Route::controller(CampaignController::class)->group(function () {
+    Route::get('/donasi', 'publicIndex')->name('donasi.index');
+    Route::get('/donasi/{slug}', 'publicShow')->name('donasi.show');
+});
 
-Route::get('/zakat', [\App\Http\Controllers\ZakatController::class, 'publicIndex'])->name('zakat.index');
-Route::get('/galang-dana', [\App\Http\Controllers\FundraisingController::class, 'publicIndex'])->name('fundraising.index');
-Route::get('/galang-dana/panduan', [\App\Http\Controllers\FundraisingController::class, 'publicGuide'])->name('fundraising.guide');
+// Event
+Route::controller(EventController::class)->group(function () {
+    Route::get('/event', 'publicIndex')->name('event.index');
+    Route::get('/event/{slug}', 'publicShow')->name('event.show');
+});
 
-Route::get('/tentang-kami', [\App\Http\Controllers\AboutController::class, 'publicIndex'])->name('about');
+// Zakat
+Route::get('/zakat', [ZakatController::class, 'publicIndex'])->name('zakat.index');
 
-Route::middleware(['auth', 'verified', 'admin'])->group(function () {
+// Galang Dana
+Route::controller(FundraisingController::class)->group(function () {
+    Route::get('/galang-dana', 'publicIndex')->name('fundraising.index');
+    Route::get('/galang-dana/panduan', 'publicGuide')->name('fundraising.guide');
+});
+
+// Bantuan & Tentang Kami
+Route::get('/pusat-bantuan', [SupportController::class, 'publicIndex'])->name('support.index');
+Route::get('/syarat-ketentuan', [App\Http\Controllers\TermController::class, 'publicIndex'])->name('terms.index');
+Route::get('/tentang-kami', [AboutController::class, 'publicIndex'])->name('about');
+
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::resource('admin/donasi', \App\Http\Controllers\CampaignController::class)->names([
-        'index' => 'admin.donasi.index',
-        'create' => 'admin.donasi.create',
-        'store' => 'admin.donasi.store',
-        'edit' => 'admin.donasi.edit',
-        'update' => 'admin.donasi.update',
-        'destroy' => 'admin.donasi.destroy',
-    ]);
+    // CRUD Resources
+    Route::resource('donasi', CampaignController::class);
+    Route::resource('event', EventController::class);
+    Route::resource('zakat', ZakatController::class);
+    Route::resource('testimoni', TestimonialController::class);
+    Route::resource('kategori', CategoryController::class)->parameters(['kategori' => 'category']);
+    Route::resource('bantuan', SupportController::class)->parameters(['bantuan' => 'dukungan']);
+    Route::resource('syarat-ketentuan', \App\Http\Controllers\TermController::class);
 
-    Route::resource('admin/event', \App\Http\Controllers\EventController::class)->names([
-        'index' => 'admin.event.index',
-        'create' => 'admin.event.create',
-        'store' => 'admin.event.store',
-        'edit' => 'admin.event.edit',
-        'update' => 'admin.event.update',
-        'destroy' => 'admin.event.destroy',
-    ]);
+    // Custom Admin Routes
+    Route::controller(FundraisingController::class)->prefix('galang-dana')->name('galang_dana.')->group(function () {
+        Route::get('/', 'adminIndex')->name('index');
+        Route::get('/{fundraising}/edit', 'edit')->name('edit');
+        Route::put('/{fundraising}', 'update')->name('update');
+        Route::delete('/{fundraising}', 'destroy')->name('destroy');
+    });
 
-    Route::resource('admin/zakat', \App\Http\Controllers\ZakatController::class)->names([
-        'index' => 'admin.zakat.index',
-        'create' => 'admin.zakat.create',
-        'store' => 'admin.zakat.store',
-        'edit' => 'admin.zakat.edit',
-        'update' => 'admin.zakat.update',
-        'destroy' => 'admin.zakat.destroy',
-    ]);
-
-    Route::get('admin/galang-dana', [\App\Http\Controllers\FundraisingController::class, 'adminIndex'])->name('admin.galang_dana.index');
-    Route::get('admin/galang-dana/{fundraising}/edit', [\App\Http\Controllers\FundraisingController::class, 'edit'])->name('admin.galang_dana.edit');
-    Route::put('admin/galang-dana/{fundraising}', [\App\Http\Controllers\FundraisingController::class, 'update'])->name('admin.galang_dana.update');
-    Route::delete('admin/galang-dana/{fundraising}', [\App\Http\Controllers\FundraisingController::class, 'destroy'])->name('admin.galang_dana.destroy');
-
-    Route::get('admin/tentang-kami', [\App\Http\Controllers\AboutController::class, 'edit'])->name('admin.about.edit');
-    Route::put('admin/tentang-kami', [\App\Http\Controllers\AboutController::class, 'update'])->name('admin.about.update');
-
-    Route::resource('admin/kategori', \App\Http\Controllers\CategoryController::class)->names([
-        'index' => 'admin.kategori.index',
-        'create' => 'admin.kategori.create',
-        'store' => 'admin.kategori.store',
-        'edit' => 'admin.kategori.edit',
-        'update' => 'admin.kategori.update',
-        'destroy' => 'admin.kategori.destroy',
-    ])->parameters(['kategori' => 'category']);
-
-    Route::resource('admin/testimoni', \App\Http\Controllers\TestimonialController::class)->names([
-        'index' => 'admin.testimoni.index',
-        'create' => 'admin.testimoni.create',
-        'store' => 'admin.testimoni.store',
-        'edit' => 'admin.testimoni.edit',
-        'update' => 'admin.testimoni.update',
-        'destroy' => 'admin.testimoni.destroy',
-    ])->parameters(['testimoni' => 'testimoni']);
+    Route::controller(AboutController::class)->prefix('tentang-kami')->name('about.')->group(function () {
+        Route::get('/', 'edit')->name('edit');
+        Route::put('/', 'update')->name('update');
+    });
 });
+
+/*
+|--------------------------------------------------------------------------
+| User Profile Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

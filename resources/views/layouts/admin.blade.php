@@ -34,12 +34,17 @@
                 </div>
 
                 <!-- Nav Links -->
-                <nav class="flex-1 px-6 space-y-2 overflow-y-auto">
+                <nav class="flex-1 px-6 space-y-2 overflow-y-auto pb-10">
                     <div class="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mb-4 px-2">Menu Utama</div>
                     
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 {{ Request::routeIs('dashboard') ? 'bg-maroon-800 text-white shadow-xl shadow-maroon-900/20' : 'text-zinc-500 hover:bg-maroon-50 hover:text-maroon-700' }}">
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 {{ Request::routeIs('admin.dashboard') ? 'bg-maroon-800 text-white shadow-xl shadow-maroon-900/20' : 'text-zinc-500 hover:bg-maroon-50 hover:text-maroon-700' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                         <span class="font-bold text-sm">Dashboard</span>
+                    </a>
+
+                    <a href="{{ route('admin.kategori.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 {{ Request::routeIs('admin.kategori.*') ? 'bg-maroon-800 text-white shadow-xl shadow-maroon-900/20' : 'text-zinc-500 hover:bg-maroon-50 hover:text-maroon-700' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                        <span class="font-bold text-sm">Kelola Kategori</span>
                     </a>
 
                     <a href="{{ route('admin.donasi.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 {{ Request::routeIs('admin.donasi.*') ? 'bg-maroon-800 text-white shadow-xl shadow-maroon-900/20' : 'text-zinc-500 hover:bg-maroon-50 hover:text-maroon-700' }}">
@@ -70,6 +75,16 @@
                     <a href="{{ route('admin.testimoni.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 {{ Request::routeIs('admin.testimoni.*') ? 'bg-maroon-800 text-white shadow-xl shadow-maroon-900/20' : 'text-zinc-500 hover:bg-maroon-50 hover:text-maroon-700' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                         <span class="font-bold text-sm">Kelola Testimoni</span>
+                    </a>
+
+                    <a href="{{ route('admin.bantuan.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 {{ Request::routeIs('admin.bantuan.*') ? 'bg-maroon-800 text-white shadow-xl shadow-maroon-900/20' : 'text-zinc-500 hover:bg-maroon-50 hover:text-maroon-700' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <span class="font-bold text-sm">Kelola Bantuan</span>
+                    </a>
+
+                    <a href="{{ route('admin.syarat-ketentuan.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 {{ Request::routeIs('admin.syarat-ketentuan.*') ? 'bg-maroon-800 text-white shadow-xl shadow-maroon-900/20' : 'text-zinc-500 hover:bg-maroon-50 hover:text-maroon-700' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span class="font-bold text-sm">Kelola Syarat & Ketentuan</span>
                     </a>
                 </nav>
 

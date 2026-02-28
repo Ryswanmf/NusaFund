@@ -149,9 +149,9 @@
                 <div class="space-y-8">
                     <h4 class="text-white font-black text-lg uppercase tracking-widest">Dukungan</h4>
                     <ul class="space-y-4 text-sm font-medium">
-                        <li><a href="#" class="hover:text-amber-400 transition-colors">Pusat Bantuan</a></li>
-                        <li><a href="#" class="hover:text-amber-400 transition-colors">Tentang Kami</a></li>
-                        <li><a href="#" class="hover:text-amber-400 transition-colors">Syarat & Ketentuan</a></li>
+                        <li><a href="{{ route('support.index') }}" class="hover:text-amber-400 transition-colors">Pusat Bantuan</a></li>
+                        <li><a href="{{ route('about') }}" class="hover:text-amber-400 transition-colors">Tentang Kami</a></li>
+                        <li><a href="{{ route('terms.index') }}" class="hover:text-amber-400 transition-colors">Syarat & Ketentuan</a></li>
                         <li><a href="#" class="hover:text-amber-400 transition-colors">Kebijakan Privasi</a></li>
                     </ul>
                 </div>
