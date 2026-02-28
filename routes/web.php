@@ -55,6 +55,15 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     Route::get('admin/tentang-kami', [\App\Http\Controllers\AboutController::class, 'edit'])->name('admin.about.edit');
     Route::put('admin/tentang-kami', [\App\Http\Controllers\AboutController::class, 'update'])->name('admin.about.update');
+
+    Route::resource('admin/kategori', \App\Http\Controllers\CategoryController::class)->names([
+        'index' => 'admin.kategori.index',
+        'create' => 'admin.kategori.create',
+        'store' => 'admin.kategori.store',
+        'edit' => 'admin.kategori.edit',
+        'update' => 'admin.kategori.update',
+        'destroy' => 'admin.kategori.destroy',
+    ])->parameters(['kategori' => 'category']);
 });
 
 Route::middleware('auth')->group(function () {
