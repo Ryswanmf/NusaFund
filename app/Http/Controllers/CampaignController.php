@@ -81,6 +81,9 @@ class CampaignController extends Controller
     // Fungsi untuk Halaman Beranda
     public function publicHome()
     {
+        // Ambil data profil/settings
+        $about = \App\Models\About::first();
+
         // Ambil kategori unggulan
         $categories = \App\Models\Category::where('is_featured', true)->take(6)->get();
 
@@ -105,7 +108,7 @@ class CampaignController extends Controller
             $urgentCampaigns = $urgentCampaigns->concat($otherCampaigns);
         }
 
-        return view('index', compact('urgentCampaigns', 'categories', 'testimonials'));
+        return view('index', compact('urgentCampaigns', 'categories', 'testimonials', 'about'));
     }
 
     // Fungsi untuk Landing Page

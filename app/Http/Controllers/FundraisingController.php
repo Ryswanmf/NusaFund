@@ -51,4 +51,11 @@ class FundraisingController extends Controller
         $fundraising = Fundraising::where('slug', $slug)->firstOrFail();
         return view('landing_page.galang_dana.show', compact('fundraising'));
     }
+
+    public function publicGuide()
+    {
+        $steps = \App\Models\FundraisingStep::orderBy('step_number')->get();
+        $faqs = \App\Models\FundraisingFaq::orderBy('order')->get();
+        return view('landing_page.galang_dana.cara', compact('steps', 'faqs'));
+    }
 }

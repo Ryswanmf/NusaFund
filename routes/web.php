@@ -13,6 +13,7 @@ Route::get('/event/{slug}', [\App\Http\Controllers\EventController::class, 'publ
 
 Route::get('/zakat', [\App\Http\Controllers\ZakatController::class, 'publicIndex'])->name('zakat.index');
 Route::get('/galang-dana', [\App\Http\Controllers\FundraisingController::class, 'publicIndex'])->name('fundraising.index');
+Route::get('/galang-dana/panduan', [\App\Http\Controllers\FundraisingController::class, 'publicGuide'])->name('fundraising.guide');
 
 Route::get('/tentang-kami', [\App\Http\Controllers\AboutController::class, 'publicIndex'])->name('about');
 

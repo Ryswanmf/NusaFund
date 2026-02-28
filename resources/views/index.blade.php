@@ -361,15 +361,15 @@
                 <div class="absolute bottom-0 right-0 w-80 h-80 bg-amber-400/5 rounded-full translate-x-1/4 translate-y-1/4"></div>
                 
                 <div class="relative z-10 max-w-3xl mx-auto">
-                    <h2 class="text-3xl md:text-5xl lg:text-6xl font-black mb-8 leading-tight">Mulai Kebaikan Anda Sendiri Hari Ini</h2>
-                    <p class="text-maroon-100 text-xl mb-12 opacity-90 leading-relaxed">Punya program kemanusiaan atau butuh bantuan darurat? Kami siap mendampingi langkah Anda.</p>
+                    <h2 class="text-3xl md:text-5xl lg:text-6xl font-black mb-8 leading-tight">{{ $about->cta_title }}</h2>
+                    <p class="text-maroon-100 text-xl mb-12 opacity-90 leading-relaxed">{{ $about->cta_description }}</p>
                     
                     <div class="flex flex-col sm:flex-row gap-5 justify-center">
-                        <a href="#" class="bg-amber-500 hover:bg-amber-400 text-maroon-900 px-12 py-5 rounded-full font-black text-xl shadow-2xl shadow-amber-950/40 transition transform hover:-translate-y-1 active:scale-95">
-                            Mulai Galang Dana
+                        <a href="{{ route('fundraising.index') }}" class="bg-amber-500 hover:bg-amber-400 text-maroon-900 px-12 py-5 rounded-full font-black text-xl shadow-2xl shadow-amber-950/40 transition transform hover:-translate-y-1 active:scale-95">
+                            {{ $about->cta_primary_button }}
                         </a>
-                        <a href="#" class="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 px-12 py-5 rounded-full font-bold text-xl transition">
-                            Pelajari Caranya
+                        <a href="{{ route('about') }}" class="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 px-12 py-5 rounded-full font-bold text-xl transition">
+                            {{ $about->cta_secondary_button }}
                         </a>
                     </div>
                 </div>

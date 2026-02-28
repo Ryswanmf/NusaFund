@@ -58,6 +58,29 @@
             </div>
         </div>
 
+        <!-- Home CTA Section Content -->
+        <div class="space-y-6 pt-6">
+            <h3 class="text-lg font-black text-zinc-900 border-b border-zinc-100 pb-4">Bagian Ajakan (CTA) Beranda</h3>
+            <div class="space-y-2">
+                <label class="text-[10px] font-black text-zinc-400 uppercase tracking-widest pl-2">Judul CTA</label>
+                <input type="text" name="cta_title" value="{{ $about->cta_title }}" required class="w-full bg-zinc-50 border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-maroon-500 font-bold text-zinc-900">
+            </div>
+            <div class="space-y-2">
+                <label class="text-[10px] font-black text-zinc-400 uppercase tracking-widest pl-2">Deskripsi CTA</label>
+                <textarea name="cta_description" rows="2" required class="w-full bg-zinc-50 border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-maroon-500 font-medium text-zinc-600">{{ $about->cta_description }}</textarea>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-zinc-400 uppercase tracking-widest pl-2">Teks Tombol Utama</label>
+                    <input type="text" name="cta_primary_button" value="{{ $about->cta_primary_button }}" required class="w-full bg-zinc-50 border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-maroon-500 font-bold text-zinc-900">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-zinc-400 uppercase tracking-widest pl-2">Teks Tombol Kedua</label>
+                    <input type="text" name="cta_secondary_button" value="{{ $about->cta_secondary_button }}" required class="w-full bg-zinc-50 border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-maroon-500 font-bold text-zinc-900">
+                </div>
+            </div>
+        </div>
+
         <button type="submit" class="w-full bg-maroon-800 text-white py-5 rounded-[2rem] font-black text-lg hover:bg-maroon-700 transition shadow-xl shadow-maroon-900/20">
             Simpan Perubahan Profil
         </button>
