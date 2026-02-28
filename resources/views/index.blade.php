@@ -3,46 +3,141 @@
 @section('title', 'NusaFund - Kebaikan untuk Semua')
 
 @section('content')
-    <!-- Hero Section -->
-    <section class="relative bg-maroon-800 text-white py-24 lg:py-36 overflow-hidden">
-        <div class="absolute top-0 right-0 -mt-24 -mr-24 opacity-10">
-            <svg width="600" height="600" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="50" fill="white" />
-            </svg>
-        </div>
+    <!-- Hero Section Slider -->
+    <section class="relative bg-maroon-800 text-white overflow-hidden" 
+             x-data="{ 
+                activeSlide: 1,
+                timer: null,
+                slides: [
+                    {
+                        id: 1,
+                        tag: '#IndonesiaBerbagi',
+                        title: 'Wujudkan <span class=\'text-amber-400\'>Perubahan</span> Lewat Kebaikan Anda',
+                        desc: 'Gabung bersama 12.000+ donatur lainnya untuk membantu sesama melalui donasi, zakat, dan aksi sosial yang transparan.',
+                        image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1470&auto=format&fit=crop',
+                        cta: 'Mulai Berdonasi',
+                        link: '{{ route('donasi.index') }}'
+                    },
+                    {
+                        id: 2,
+                        tag: '#PendidikanUntukSemua',
+                        title: 'Bantu <span class=\'text-amber-400\'>Anak Bangsa</span> Meraih Cita-Cita',
+                        desc: 'Ribuan anak di pelosok negeri menanti uluran tangan Anda untuk mendapatkan fasilitas pendidikan yang layak.',
+                        image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1470&auto=format&fit=crop',
+                        cta: 'Lihat Program',
+                        link: '{{ route('donasi.index') }}'
+                    },
+                    {
+                        id: 3,
+                        tag: '#RelawanNusantara',
+                        title: 'Jadilah <span class=\'text-amber-400\'>Relawan</span> Aksi Sosial Nyata',
+                        desc: 'Jangan hanya berdonasi, terjun langsung ke lapangan dan rasakan kebahagiaan saat membantu sesama.',
+                        image: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=1473&auto=format&fit=crop',
+                        cta: 'Ikuti Event',
+                        link: '{{ route('event.index') }}'
+                    }
+                ],
+                next() { 
+                    this.activeSlide = this.activeSlide === this.slides.length ? 1 : this.activeSlide + 1 
+                },
+                prev() { 
+                    this.activeSlide = this.activeSlide === 1 ? this.slides.length : this.activeSlide - 1 
+                },
+                startTimer() {
+                    this.timer = setInterval(() => {
+                        this.next();
+                    }, 6000);
+                },
+                stopTimer() {
+                    clearInterval(this.timer);
+                }
+             }" 
+             x-init="startTimer()"
+             @mouseenter="stopTimer()" 
+             @mouseleave="startTimer()">
         
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div class="text-center lg:text-left">
-                    <span class="inline-block bg-white/10 backdrop-blur-md text-amber-400 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-6">#IndonesiaBerbagi</span>
-                    <h1 class="text-4xl md:text-5xl lg:text-7xl font-extrabold leading-[1.1] mb-8 text-balance">
-                        Wujudkan <span class="text-amber-400">Perubahan</span> Lewat Kebaikan Anda
-                    </h1>
-                    <p class="text-lg md:text-xl text-maroon-50 mb-10 max-w-lg mx-auto lg:mx-0 leading-relaxed opacity-90">
-                        Gabung bersama 12.000+ donatur lainnya untuk membantu sesama melalui donasi, zakat, dan aksi sosial yang transparan.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="{{ route('donasi.index') }}" class="bg-amber-500 hover:bg-amber-400 text-maroon-950 px-10 py-4 rounded-full font-black text-lg shadow-xl shadow-amber-900/40 transition transform hover:-translate-y-1">
-                            Mulai Berdonasi
-                        </a>
-                        <a href="#" class="bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 px-10 py-4 rounded-full font-bold text-lg transition">
-                            Pelajari Program
-                        </a>
+        <!-- Slider Content -->
+        <div class="relative min-h-[650px] lg:min-h-[750px] flex items-center">
+            <template x-for="slide in slides" :key="slide.id">
+                <div x-show="activeSlide === slide.id" 
+                     x-transition:enter="transition ease-out duration-1000"
+                     x-transition:enter-start="opacity-0 transform translate-x-full"
+                     x-transition:enter-end="opacity-100 transform translate-x-0"
+                     x-transition:leave="transition ease-in duration-700"
+                     x-transition:leave-start="opacity-100 transform translate-x-0"
+                     x-transition:leave-end="opacity-0 transform -translate-x-full"
+                     class="absolute inset-0 w-full h-full flex items-center">
+                    
+                    <!-- Background Decorative Overlay -->
+                    <div class="absolute inset-0 bg-maroon-800">
+                        <div class="absolute inset-0 opacity-20 pointer-events-none">
+                            <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                <circle cx="100" cy="0" r="40" fill="white" />
+                                <circle cx="0" cy="100" r="30" fill="#FBBF24" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+                        <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                            <!-- Text Content -->
+                            <div class="text-center lg:text-left order-2 lg:order-1">
+                                <span class="inline-block bg-amber-500/20 text-amber-400 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-[0.2em] mb-8 border border-amber-500/30" x-text="slide.tag"></span>
+                                <h1 class="text-4xl md:text-5xl lg:text-7xl font-black mb-8 leading-[1.1] tracking-tight" x-html="slide.title"></h1>
+                                <p class="text-lg md:text-xl text-maroon-50 mb-12 max-w-xl mx-auto lg:mx-0 leading-relaxed opacity-80 font-medium" x-text="slide.desc"></p>
+                                <div class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
+                                    <a :href="slide.link" class="bg-amber-500 hover:bg-amber-400 text-maroon-950 px-12 py-5 rounded-2xl font-black text-xl shadow-2xl shadow-amber-900/40 transition transform hover:-translate-y-1 active:scale-95">
+                                        <span x-text="slide.cta"></span>
+                                    </a>
+                                    <a href="{{ route('about') }}" class="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 px-12 py-5 rounded-2xl font-bold text-xl transition active:scale-95">
+                                        Tentang Kami
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Image Content -->
+                            <div class="hidden lg:block order-1 lg:order-2 relative group">
+                                <div class="relative z-10 rounded-[4rem] overflow-hidden shadow-[0_35px_60px_-15px_rgba(0,0,0,0.5)] border-[12px] border-white/10 aspect-[4/3] transform transition duration-1000 group-hover:rotate-0 rotate-2">
+                                    <img :src="slide.image" :alt="slide.tag" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-maroon-900/40 via-transparent to-transparent"></div>
+                                </div>
+                                <!-- Floating Card -->
+                                <div class="absolute -bottom-10 -left-10 z-20 bg-white p-8 rounded-[2.5rem] shadow-2xl text-maroon-950 flex items-center gap-6 animate-bounce-slow border border-zinc-100">
+                                    <div class="bg-green-100 w-16 h-16 rounded-3xl flex items-center justify-center shadow-inner">
+                                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400 mb-1">Status Keamanan</p>
+                                        <p class="text-2xl font-black tracking-tight">Verified <span class="text-maroon-700">Amanah</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="hidden lg:block relative">
-                    <div class="rounded-[2.5rem] overflow-hidden shadow-2xl transform rotate-2 hover:rotate-0 transition duration-700 ease-out border-8 border-white/10">
-                        <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1470&auto=format&fit=crop" alt="Charity" class="w-full h-auto">
-                    </div>
-                    <div class="absolute -bottom-10 -left-10 bg-white p-6 rounded-3xl shadow-2xl text-maroon-950 flex items-center gap-5 animate-bounce-slow">
-                        <div class="bg-green-100 p-3 rounded-2xl">
-                            <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-1">Total Tersalurkan</p>
-                            <p class="text-2xl font-black">Rp 2.5 Miliar+</p>
-                        </div>
-                    </div>
+            </template>
+        </div>
+
+        <!-- Slider Controls & Indicators -->
+        <div class="absolute bottom-12 left-0 right-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+                <!-- Indicators -->
+                <div class="flex gap-3 order-2 md:order-1">
+                    <template x-for="slide in slides" :key="slide.id">
+                        <button @click="activeSlide = slide.id" 
+                                :class="activeSlide === slide.id ? 'w-16 bg-amber-500' : 'w-3 bg-white/20 hover:bg-white/40'" 
+                                class="h-3 rounded-full transition-all duration-700 shadow-lg"></button>
+                    </template>
+                </div>
+
+                <!-- Arrow Navigation -->
+                <div class="flex gap-4 order-1 md:order-2">
+                    <button @click="prev()" class="w-14 h-14 rounded-2xl bg-white/10 hover:bg-amber-500 hover:text-maroon-950 border border-white/20 flex items-center justify-center transition-all duration-300 backdrop-blur-md group">
+                        <svg class="w-6 h-6 transform group-hover:-translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button @click="next()" class="w-14 h-14 rounded-2xl bg-white/10 hover:bg-amber-500 hover:text-maroon-950 border border-white/20 flex items-center justify-center transition-all duration-300 backdrop-blur-md group">
+                        <svg class="w-6 h-6 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
                 </div>
             </div>
         </div>
@@ -77,7 +172,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                 <div class="max-w-xl">
-                    <h2 class="text-3xl md:text-4xl font-black text-zinc-900 mb-4">Pilih Kategori Kebaikan</h2>
+                    <h2 class="text-3xl md:text-4xl font-black text-zinc-900 mb-4 tracking-tight">Pilih Kategori Kebaikan</h2>
                     <p class="text-zinc-500 text-lg">Salurkan bantuan Anda ke sektor yang paling membutuhkan perhatian Anda saat ini.</p>
                 </div>
                 <a href="#" class="inline-flex items-center gap-2 text-maroon-700 font-bold hover:gap-4 transition-all group">
@@ -100,7 +195,7 @@
 
                 @foreach($categories as $cat)
                 <a href="#" class="bg-white p-8 rounded-[2rem] shadow-sm border border-zinc-100 flex flex-col items-center text-center hover:shadow-xl hover:border-maroon-200 transition-all duration-300 group hover:-translate-y-2">
-                    <div class="w-16 h-16 bg-maroon-50 rounded-2xl flex items-center justify-center text-maroon-600 mb-5 group-hover:bg-maroon-600 group-hover:text-white transition-colors duration-300">
+                    <div class="w-16 h-16 bg-maroon-50 text-maroon-700 rounded-2xl flex items-center justify-center text-maroon-600 mb-5 group-hover:bg-maroon-600 group-hover:text-white transition-colors duration-300">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $cat['icon'] }}"></path></svg>
                     </div>
                     <span class="font-bold text-zinc-800">{{ $cat['name'] }}</span>
@@ -115,7 +210,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                 <div class="max-w-xl">
-                    <h2 class="text-3xl md:text-4xl font-black text-zinc-900 mb-4">Donasi Mendesak</h2>
+                    <h2 class="text-3xl md:text-4xl font-black text-zinc-900 mb-4 tracking-tight">Donasi Mendesak</h2>
                     <p class="text-zinc-500 text-lg">Waktu sangat berharga bagi mereka. Ulurkan tangan Anda sekarang untuk campaign di bawah ini.</p>
                 </div>
                 <a href="{{ route('donasi.index') }}" class="inline-flex items-center gap-2 text-maroon-700 font-bold hover:gap-4 transition-all group">
