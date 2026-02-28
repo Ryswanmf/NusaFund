@@ -14,9 +14,7 @@ Route::get('/event/{slug}', [\App\Http\Controllers\EventController::class, 'publ
 Route::get('/zakat', [\App\Http\Controllers\ZakatController::class, 'publicIndex'])->name('zakat.index');
 Route::get('/galang-dana', [\App\Http\Controllers\FundraisingController::class, 'publicIndex'])->name('fundraising.index');
 
-Route::get('/tentang-kami', function () {
-    return view('landing_page.tentang_kami.index');
-})->name('about');
+Route::get('/tentang-kami', [\App\Http\Controllers\AboutController::class, 'publicIndex'])->name('about');
 
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/dashboard', function () {
@@ -54,6 +52,9 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('admin/galang-dana/{fundraising}/edit', [\App\Http\Controllers\FundraisingController::class, 'edit'])->name('admin.galang_dana.edit');
     Route::put('admin/galang-dana/{fundraising}', [\App\Http\Controllers\FundraisingController::class, 'update'])->name('admin.galang_dana.update');
     Route::delete('admin/galang-dana/{fundraising}', [\App\Http\Controllers\FundraisingController::class, 'destroy'])->name('admin.galang_dana.destroy');
+
+    Route::get('admin/tentang-kami', [\App\Http\Controllers\AboutController::class, 'edit'])->name('admin.about.edit');
+    Route::put('admin/tentang-kami', [\App\Http\Controllers\AboutController::class, 'update'])->name('admin.about.update');
 });
 
 Route::middleware('auth')->group(function () {

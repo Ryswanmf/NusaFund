@@ -61,6 +61,11 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         <span class="font-bold text-sm">Kelola Galang Dana</span>
                     </a>
+
+                    <a href="{{ route('admin.about.edit') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 {{ Request::routeIs('admin.about.*') ? 'bg-maroon-800 text-white shadow-xl shadow-maroon-900/20' : 'text-zinc-500 hover:bg-maroon-50 hover:text-maroon-700' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="font-bold text-sm">Kelola Tentang Kami</span>
+                    </a>
                 </nav>
 
                 <!-- Footer Sidebar (Profile & Logout) -->
