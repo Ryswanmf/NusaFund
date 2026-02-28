@@ -43,6 +43,7 @@ Route::controller(FundraisingController::class)->group(function () {
 // Bantuan & Tentang Kami
 Route::get('/pusat-bantuan', [SupportController::class, 'publicIndex'])->name('support.index');
 Route::get('/syarat-ketentuan', [App\Http\Controllers\TermController::class, 'publicIndex'])->name('terms.index');
+Route::get('/kebijakan-privasi', [App\Http\Controllers\PrivacyPolicyController::class, 'publicIndex'])->name('privacy.index');
 Route::get('/tentang-kami', [AboutController::class, 'publicIndex'])->name('about');
 
 /*
@@ -65,6 +66,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::resource('kategori', CategoryController::class)->parameters(['kategori' => 'category']);
     Route::resource('bantuan', SupportController::class)->parameters(['bantuan' => 'dukungan']);
     Route::resource('syarat-ketentuan', \App\Http\Controllers\TermController::class);
+    Route::resource('kebijakan-privasi', \App\Http\Controllers\PrivacyPolicyController::class);
 
     // Custom Admin Routes
     Route::controller(FundraisingController::class)->prefix('galang-dana')->name('galang_dana.')->group(function () {
