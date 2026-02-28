@@ -47,17 +47,18 @@
                     <a href="{{ route('donasi.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('donasi*') ? 'text-amber-400' : '' }}">Donasi</a>
                     <a href="{{ route('event.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('event*') ? 'text-amber-400' : '' }}">Event</a>
                     <a href="{{ route('zakat.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('zakat*') ? 'text-amber-400' : '' }}">Zakat</a>
+                    <a href="{{ route('about') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('tentang-kami') ? 'text-amber-400' : '' }}">Tentang Kami</a>
                     @auth
                         <a href="{{ url('/dashboard') }}" class="bg-amber-500 hover:bg-amber-400 text-maroon-950 px-6 py-2.5 rounded-full font-bold transition shadow-lg shadow-amber-900/20 active:scale-95">
                             Dashboard
                         </a>
                     @else
-                        <div class="flex items-center gap-4">
-                            <a href="{{ route('login') }}" class="text-white hover:text-amber-400 transition">
+                        <div class="flex items-center gap-3">
+                            <a href="{{ route('login') }}" class="text-white hover:text-amber-400 transition px-3 py-2 text-sm font-bold">
                                 Masuk
                             </a>
                             @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="bg-amber-500 hover:bg-amber-400 text-maroon-950 px-6 py-2.5 rounded-full font-bold transition shadow-lg shadow-amber-900/20 active:scale-95">
+                                <a href="{{ route('register') }}" class="bg-amber-500 hover:bg-amber-400 text-maroon-950 px-5 py-2 rounded-full font-bold transition shadow-lg shadow-amber-900/20 active:scale-95 text-sm">
                                     Daftar
                                 </a>
                             @endif
@@ -88,13 +89,14 @@
                 <a href="{{ route('donasi.index') }}" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium {{ Request::is('donasi*') ? 'text-amber-400 bg-maroon-800' : '' }}">Donasi</a>
                 <a href="{{ route('event.index') }}" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium {{ Request::is('event*') ? 'text-amber-400 bg-maroon-800' : '' }}">Event</a>
                 <a href="{{ route('zakat.index') }}" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium {{ Request::is('zakat*') ? 'text-amber-400 bg-maroon-800' : '' }}">Zakat</a>
+                <a href="{{ route('about') }}" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium {{ Request::is('tentang-kami') ? 'text-amber-400 bg-maroon-800' : '' }}">Tentang Kami</a>
                 <div class="pt-4 space-y-3">
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="block w-full text-center bg-amber-500 text-maroon-950 py-4 rounded-xl font-bold shadow-lg">Dashboard</a>
+                        <a href="{{ url('/dashboard') }}" class="block w-full text-center bg-amber-500 text-maroon-950 py-3 rounded-xl font-bold shadow-lg">Dashboard</a>
                     @else
-                        <a href="{{ route('login') }}" class="block w-full text-center border border-amber-500/50 text-amber-500 py-4 rounded-xl font-bold">Masuk</a>
+                        <a href="{{ route('login') }}" class="block w-full text-center border border-amber-500/50 text-amber-500 py-3 rounded-xl font-bold text-sm">Masuk</a>
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="block w-full text-center bg-amber-500 text-maroon-950 py-4 rounded-xl font-bold shadow-lg">Daftar Sekarang</a>
+                            <a href="{{ route('register') }}" class="block w-full text-center bg-amber-500 text-maroon-950 py-3 rounded-xl font-bold shadow-lg text-sm">Daftar Sekarang</a>
                         @endif
                     @endauth
                 </div>

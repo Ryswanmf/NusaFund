@@ -29,6 +29,10 @@ Route::get('/zakat', function () {
     return view('landing_page.zakat.index');
 })->name('zakat.index');
 
+Route::get('/tentang-kami', function () {
+    return view('landing_page.tentang_kami.index');
+})->name('about');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
