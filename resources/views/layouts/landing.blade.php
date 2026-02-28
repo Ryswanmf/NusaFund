@@ -47,6 +47,7 @@
                     <a href="{{ route('donasi.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('donasi*') ? 'text-amber-400' : '' }}">Donasi</a>
                     <a href="{{ route('event.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('event*') ? 'text-amber-400' : '' }}">Event</a>
                     <a href="{{ route('zakat.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('zakat*') ? 'text-amber-400' : '' }}">Zakat</a>
+                    <a href="{{ route('fundraising.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('galang-dana*') ? 'text-amber-400' : '' }}">Galang Dana</a>
                     <a href="{{ route('about') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('tentang-kami') ? 'text-amber-400' : '' }}">Tentang Kami</a>
                     @auth
                         <a href="{{ url('/dashboard') }}" class="bg-amber-500 hover:bg-amber-400 text-maroon-950 px-6 py-2.5 rounded-full font-bold transition shadow-lg shadow-amber-900/20 active:scale-95">
@@ -89,6 +90,7 @@
                 <a href="{{ route('donasi.index') }}" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium {{ Request::is('donasi*') ? 'text-amber-400 bg-maroon-800' : '' }}">Donasi</a>
                 <a href="{{ route('event.index') }}" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium {{ Request::is('event*') ? 'text-amber-400 bg-maroon-800' : '' }}">Event</a>
                 <a href="{{ route('zakat.index') }}" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium {{ Request::is('zakat*') ? 'text-amber-400 bg-maroon-800' : '' }}">Zakat</a>
+                <a href="{{ route('fundraising.index') }}" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium {{ Request::is('galang-dana*') ? 'text-amber-400 bg-maroon-800' : '' }}">Galang Dana</a>
                 <a href="{{ route('about') }}" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium {{ Request::is('tentang-kami') ? 'text-amber-400 bg-maroon-800' : '' }}">Tentang Kami</a>
                 <div class="pt-4 space-y-3">
                     @auth
