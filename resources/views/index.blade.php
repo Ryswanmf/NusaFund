@@ -311,42 +311,31 @@
                     <h2 class="text-3xl md:text-5xl font-black text-zinc-900 mb-8 leading-tight">Suara dari Hati yang Bersyukur</h2>
                     
                     <div class="space-y-8">
-                        <!-- Testi Item 1 -->
-                        <div class="bg-zinc-50 p-8 rounded-[2rem] border border-zinc-100 flex flex-col md:flex-row gap-6 hover:shadow-xl transition-all duration-500">
+                        @forelse($testimonials as $t)
+                        <!-- Testi Item -->
+                        <div class="bg-zinc-50 p-8 rounded-[2rem] border border-zinc-100 flex flex-col md:flex-row gap-6 hover:shadow-xl transition-all duration-500 group">
                             <div class="flex-shrink-0">
-                                <div class="w-16 h-16 rounded-full bg-maroon-100 flex items-center justify-center text-maroon-600 shadow-inner">
-                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 7.55228 14.017 7V5C14.017 4.44772 14.4647 4 15.017 4H20.017C21.1216 4 22.017 4.89543 22.017 6V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM2.01697 21L2.01697 18C2.01697 16.8954 2.9124 16 4.01697 16H7.01697C7.56925 16 8.01697 15.5523 8.01697 15V9C8.01697 8.44772 7.56925 8 7.01697 8H3.01697C2.46468 8 2.01697 7.55228 2.01697 7V5C2.01697 4.44772 2.46468 4 3.01697 4H8.01697C9.12154 4 10.017 4.89543 10.017 6V15C10.017 18.3137 7.33068 21 4.01697 21H2.01697Z"></path></svg>
+                                <div class="w-16 h-16 rounded-2xl bg-maroon-100 flex items-center justify-center text-maroon-600 shadow-inner overflow-hidden">
+                                    @if($t->avatar)
+                                        <img src="{{ asset('storage/' . $t->avatar) }}" class="w-full h-full object-cover">
+                                    @else
+                                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 7.55228 14.017 7V5C14.017 4.44772 14.4647 4 15.017 4H20.017C21.1216 4 22.017 4.89543 22.017 6V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM2.01697 21L2.01697 18C2.01697 16.8954 2.9124 16 4.01697 16H7.01697C7.56925 16 8.01697 15.5523 8.01697 15V9C8.01697 8.44772 7.56925 8 7.01697 8H3.01697C2.46468 8 2.01697 7.55228 2.01697 7V5C2.01697 4.44772 2.46468 4 3.01697 4H8.01697C9.12154 4 10.017 4.89543 10.017 6V15C10.017 18.3137 7.33068 21 4.01697 21H2.01697Z"></path></svg>
+                                    @endif
                                 </div>
                             </div>
                             <div>
-                                <p class="text-zinc-600 text-lg leading-relaxed mb-6 font-medium italic">"NusaFund memberikan harapan baru bagi sekolah kami. Transparansinya luar biasa."</p>
+                                <p class="text-zinc-600 text-lg leading-relaxed mb-6 font-medium italic">"{{ $t->message }}"</p>
                                 <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-full bg-maroon-200"></div>
                                     <div>
-                                        <p class="font-bold text-zinc-900">Budi Santoso</p>
-                                        <p class="text-xs text-zinc-400 font-bold uppercase tracking-wider">Donatur Rutin</p>
+                                        <p class="font-bold text-zinc-900 group-hover:text-maroon-700 transition-colors">{{ $t->name }}</p>
+                                        <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">{{ $t->role }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- Testi Item 2 -->
-                        <div class="bg-zinc-50 p-8 rounded-[2rem] border border-zinc-100 flex flex-col md:flex-row gap-6 hover:shadow-xl transition-all duration-500">
-                            <div class="flex-shrink-0">
-                                <div class="w-16 h-16 rounded-full bg-maroon-100 flex items-center justify-center text-maroon-600 shadow-inner">
-                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 7.55228 14.017 7V5C14.017 4.44772 14.4647 4 15.017 4H20.017C21.1216 4 22.017 4.89543 22.017 6V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM2.01697 21L2.01697 18C2.01697 16.8954 2.9124 16 4.01697 16H7.01697C7.56925 16 8.01697 15.5523 8.01697 15V9C8.01697 8.44772 7.56925 8 7.01697 8H3.01697C2.46468 8 2.01697 7.55228 2.01697 7V5C2.01697 4.44772 2.46468 4 3.01697 4H8.01697C9.12154 4 10.017 4.89543 10.017 6V15C10.017 18.3137 7.33068 21 4.01697 21H2.01697Z"></path></svg>
-                                </div>
-                            </div>
-                            <div>
-                                <p class="text-zinc-600 text-lg leading-relaxed mb-6 font-medium italic">"Terima kasih donatur NusaFund, bantuan kalian menyelamatkan nyawa anak saya."</p>
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-full bg-amber-200"></div>
-                                    <div>
-                                        <p class="font-bold text-zinc-900">Siti Rahma</p>
-                                        <p class="text-xs text-zinc-400 font-bold uppercase tracking-wider">Penerima Manfaat</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @empty
+                        <p class="text-zinc-400 font-medium">Belum ada kisah kebaikan.</p>
+                        @endforelse
                     </div>
                 </div>
 

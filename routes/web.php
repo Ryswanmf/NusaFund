@@ -64,6 +64,15 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         'update' => 'admin.kategori.update',
         'destroy' => 'admin.kategori.destroy',
     ])->parameters(['kategori' => 'category']);
+
+    Route::resource('admin/testimoni', \App\Http\Controllers\TestimonialController::class)->names([
+        'index' => 'admin.testimoni.index',
+        'create' => 'admin.testimoni.create',
+        'store' => 'admin.testimoni.store',
+        'edit' => 'admin.testimoni.edit',
+        'update' => 'admin.testimoni.update',
+        'destroy' => 'admin.testimoni.destroy',
+    ])->parameters(['testimoni' => 'testimoni']);
 });
 
 Route::middleware('auth')->group(function () {

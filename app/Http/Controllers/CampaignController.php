@@ -84,6 +84,9 @@ class CampaignController extends Controller
         // Ambil kategori unggulan
         $categories = \App\Models\Category::where('is_featured', true)->take(6)->get();
 
+        // Ambil testimoni yang dipublish
+        $testimonials = \App\Models\Testimonial::where('is_published', true)->latest()->take(2)->get();
+
         // Ambil kampanye yang mendesak, atau yang terbaru jika tidak ada yang mendesak
         $urgentCampaigns = Campaign::where('status', 'active')
             ->where('is_urgent', true)
@@ -102,7 +105,7 @@ class CampaignController extends Controller
             $urgentCampaigns = $urgentCampaigns->concat($otherCampaigns);
         }
 
-        return view('index', compact('urgentCampaigns', 'categories'));
+        return view('index', compact('urgentCampaigns', 'categories', 'testimonials'));
     }
 
     // Fungsi untuk Landing Page
