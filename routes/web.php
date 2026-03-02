@@ -28,6 +28,13 @@ Route::controller(CampaignController::class)->group(function () {
     Route::get('/donasi/{slug}', 'publicShow')->name('donasi.show');
 });
 
+// Transaksi Donasi
+Route::get('/donasi/{campaign:slug}/bayar', [\App\Http\Controllers\DonationController::class, 'create'])->name('donasi.pay');
+Route::post('/donasi/{campaign:slug}/bayar', [\App\Http\Controllers\DonationController::class, 'store'])->name('donasi.submit');
+
+// Midtrans Callback
+Route::post('/midtrans/callback', [\App\Http\Controllers\MidtransController::class, 'callback'])->name('midtrans.callback');
+
 // Event
 Route::controller(EventController::class)->group(function () {
     Route::get('/event', 'publicIndex')->name('event.index');

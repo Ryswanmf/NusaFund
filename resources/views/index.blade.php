@@ -101,11 +101,10 @@
                     <h2 class="text-3xl md:text-4xl font-black text-zinc-900 mb-4 tracking-tight">Pilih Kategori Kebaikan</h2>
                     <p class="text-zinc-500 text-lg">Salurkan bantuan Anda ke sektor yang paling membutuhkan perhatian Anda saat ini.</p>
                 </div>
-                <a href="#" class="inline-flex items-center gap-2 text-maroon-700 font-bold hover:gap-4 transition-all group">
-                    Lihat Semua Kategori 
+                <a href="{{ route('donasi.index') }}" class="inline-flex items-center gap-2 text-maroon-700 font-bold hover:gap-4 transition-all group">
+                    Lihat Semua Kategori
                     <svg class="w-5 h-5 transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                </a>
-            </div>
+                </a>            </div>
             
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                 @foreach($categories as $cat)

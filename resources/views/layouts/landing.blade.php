@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'NusaFund - Kebaikan untuk Semua')</title>
     
+    <!-- SEO & Social Sharing Meta Tags -->
+    <meta name="description" content="@yield('meta_description', 'Platform penggalangan dana paling transparan dan terpercaya di Indonesia.')">
+    <meta property="og:title" content="@yield('title', 'NusaFund - Kebaikan untuk Semua')">
+    <meta property="og:description" content="@yield('meta_description', 'Bantu sesama melalui berbagai program kemanusiaan di NusaFund.')">
+    <meta property="og:image" content="@yield('meta_image', asset('images/nusafac.png'))">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/nusafac.png') }}">
     

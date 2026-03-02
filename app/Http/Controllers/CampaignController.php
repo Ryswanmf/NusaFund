@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Campaign;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CampaignController extends Controller
 {
@@ -142,6 +143,14 @@ class CampaignController extends Controller
     public function publicShow($slug)
     {
         $campaign = Campaign::where('slug', $slug)->firstOrFail();
-        return view('landing_page.donasi.show', compact('campaign'));
+        
+        // Data untuk SEO & Social Sharing
+        $meta = [
+            'title' => $campaign->title . ' - NusaFund',
+            'description' => Str::limit(strip_tags($campaign->description), 160),
+            'image' => $campaign->image ? (filter_var($campaign->image, FILTER_VALIDATE_URL) ? $campaign->image : asset('storage/' . $campaign->image)) : asset('images/nusafac.png')
+        ];
+
+        return view('landing_page.donasi.show', compact('campaign', 'meta'));
     }
 }

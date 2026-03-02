@@ -122,6 +122,14 @@ class EventController extends Controller
     public function publicShow($slug)
     {
         $event = Event::where('slug', $slug)->firstOrFail();
-        return view('landing_page.event.show', compact('event'));
+
+        // Data untuk SEO & Social Sharing
+        $meta = [
+            'title' => $event->title . ' - NusaFund',
+            'description' => \Illuminate\Support\Str::limit(strip_tags($event->description), 160),
+            'image' => $event->image ? (filter_var($event->image, FILTER_VALIDATE_URL) ? $event->image : asset('storage/' . $event->image)) : asset('images/nusafac.png')
+        ];
+
+        return view('landing_page.event.show', compact('event', 'meta'));
     }
 }
