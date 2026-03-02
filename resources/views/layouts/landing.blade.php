@@ -194,7 +194,7 @@
                         <li><a href="{{ route('about') }}" class="hover:text-amber-400 transition-colors">Tentang Kami</a></li>
                         <li><a href="{{ route('terms.index') }}" class="hover:text-amber-400 transition-colors">Syarat & Ketentuan</a></li>
                         <li><a href="{{ route('privacy.index') }}" class="hover:text-amber-400 transition-colors">Kebijakan Privasi</a></li>
-                        <li><a href="{{ route('privacy.index') }}" class="hover:text-amber-400 transition-colors">FAQ</a></li>
+                        <li><a href="{{ route('faq.index') }}" class="hover:text-amber-400 transition-colors">FAQ</a></li>
                     </ul>
                 </div>
 
