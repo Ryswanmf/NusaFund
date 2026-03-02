@@ -40,6 +40,9 @@ Route::get('/zakat', [ZakatController::class, 'publicIndex'])->name('zakat.index
 // FAQ
 Route::get('/faq', [FaqController::class, 'publicIndex'])->name('faq.index');
 
+// ChatBot
+Route::post('/chatbot/message', [\App\Http\Controllers\ChatBotController::class, 'message'])->name('chatbot.message');
+
 // Galang Dana
 Route::controller(FundraisingController::class)->prefix('galang-dana')->name('fundraising.')->group(function () {
     Route::get('/', 'publicIndex')->name('index');
@@ -117,6 +120,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
