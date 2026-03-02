@@ -107,23 +107,12 @@ class CampaignController extends Controller
         // Ambil testimoni yang dipublish
         $testimonials = \App\Models\Testimonial::where('is_published', true)->latest()->take(2)->get();
 
-        // Ambil kampanye yang mendesak, atau yang terbaru jika tidak ada yang mendesak
+        // Ambil kampanye: Prioritas Mendesak (is_urgent) lalu Terbaru (latest)
         $urgentCampaigns = Campaign::where('status', 'active')
-            ->where('is_urgent', true)
+            ->orderBy('is_urgent', 'desc')
             ->latest()
             ->take(3)
             ->get();
-
-        // Jika kampanye mendesak kurang dari 3, ambil dari kampanye terbaru lainnya
-        if ($urgentCampaigns->count() < 3) {
-            $otherCampaigns = Campaign::where('status', 'active')
-                ->where('is_urgent', false)
-                ->latest()
-                ->take(3 - $urgentCampaigns->count())
-                ->get();
-            
-            $urgentCampaigns = $urgentCampaigns->concat($otherCampaigns);
-        }
 
         return view('index', compact('urgentCampaigns', 'categories', 'testimonials', 'about', 'hero'));
     }
@@ -131,7 +120,10 @@ class CampaignController extends Controller
     // Fungsi untuk Landing Page
     public function publicIndex(Request $request)
     {
-        $query = Campaign::where('status', 'active')->latest();
+        // Prioritas: Mendesak (is_urgent) lalu Terbaru (latest)
+        $query = Campaign::where('status', 'active')
+            ->orderBy('is_urgent', 'desc')
+            ->latest();
 
         if ($request->has('category') && $request->category != 'Semua') {
             $query->where('category', $request->category);
