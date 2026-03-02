@@ -178,7 +178,7 @@
                                 <span class="text-maroon-600">{{ round($percent) }}% Tercapai</span>
                                 <span class="flex items-center gap-1.5 bg-zinc-50 px-3 py-1 rounded-full">
                                     <svg class="w-3 h-3 text-maroon-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    {{ now()->diffInDays($camp->end_date) }} Hari Lagi
+                                    {{ ceil(now()->diffInDays($camp->end_date)) }} Hari Lagi
                                 </span>
                             </div>
                             <a href="{{ route('donasi.show', $camp->slug) }}" class="block w-full text-center mt-4 bg-maroon-50 text-maroon-700 hover:bg-maroon-700 hover:text-white py-4 rounded-2xl font-black transition-all duration-300 transform active:scale-95">

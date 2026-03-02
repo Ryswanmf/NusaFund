@@ -8,15 +8,22 @@ use Illuminate\Support\Facades\Storage;
 
 class CampaignController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $campaigns = Campaign::latest()->paginate(10);
+        $query = Campaign::latest();
+
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $campaigns = $query->paginate(10);
         return view('admin.donasi.index', compact('campaigns'));
     }
 
     public function create()
     {
-        return view('admin.donasi.create');
+        $categories = \App\Models\Category::all();
+        return view('admin.donasi.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -25,13 +32,14 @@ class CampaignController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required',
             'category' => 'required',
-            'target_amount' => 'required|numeric',
-            'end_date' => 'required|date',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'target_amount' => 'required|numeric|min:1000',
+            'end_date' => 'required|date|after:today',
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
         $data = $request->all();
         $data['is_urgent'] = $request->has('is_urgent');
+        $data['status'] = $request->status ?? 'active';
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('campaigns', 'public');
@@ -42,38 +50,44 @@ class CampaignController extends Controller
         return redirect()->route('admin.donasi.index')->with('success', 'Kampanye berhasil dibuat!');
     }
 
-    public function edit(Campaign $campaign)
+    public function edit(Campaign $donasi)
     {
-        return view('admin.donasi.edit', compact('campaign'));
+        $categories = \App\Models\Category::all();
+        return view('admin.donasi.edit', [
+            'campaign' => $donasi,
+            'categories' => $categories
+        ]);
     }
 
-    public function update(Request $request, Campaign $campaign)
+    public function update(Request $request, Campaign $donasi)
     {
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
             'category' => 'required',
-            'target_amount' => 'required|numeric',
+            'target_amount' => 'required|numeric|min:1000',
             'end_date' => 'required|date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'status' => 'required|in:active,inactive,completed'
         ]);
 
         $data = $request->all();
         $data['is_urgent'] = $request->has('is_urgent');
 
         if ($request->hasFile('image')) {
-            if ($campaign->image) Storage::disk('public')->delete($campaign->image);
+            if ($donasi->image) Storage::disk('public')->delete($donasi->image);
             $data['image'] = $request->file('image')->store('campaigns', 'public');
         }
 
-        $campaign->update($data);
+        $donasi->update($data);
 
         return redirect()->route('admin.donasi.index')->with('success', 'Kampanye berhasil diperbarui!');
     }
 
-    public function destroy(Campaign $campaign)
+    public function destroy(Campaign $donasi)
     {
-        if ($campaign->image) Storage::disk('public')->delete($campaign->image);
-        $campaign->delete();
+        if ($donasi->image) Storage::disk('public')->delete($donasi->image);
+        $donasi->delete();
 
         return redirect()->route('admin.donasi.index')->with('success', 'Kampanye berhasil dihapus!');
     }
@@ -115,10 +129,22 @@ class CampaignController extends Controller
     }
 
     // Fungsi untuk Landing Page
-    public function publicIndex()
+    public function publicIndex(Request $request)
     {
-        $campaigns = Campaign::where('status', 'active')->latest()->get();
-        return view('landing_page.donasi.index', compact('campaigns'));
+        $query = Campaign::where('status', 'active')->latest();
+
+        if ($request->has('category') && $request->category != 'Semua') {
+            $query->where('category', $request->category);
+        }
+
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $campaigns = $query->get();
+        $categories = \App\Models\Category::all();
+
+        return view('landing_page.donasi.index', compact('campaigns', 'categories'));
     }
 
     public function publicShow($slug)

@@ -91,7 +91,7 @@
                                         <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Donatur</p>
                                     </div>
                                     <div class="bg-zinc-50 p-4 rounded-2xl text-center">
-                                        <p class="text-2xl font-black text-zinc-900">{{ now()->diffInDays($campaign->end_date) }}</p>
+                                        <p class="text-2xl font-black text-zinc-900">{{ ceil(now()->diffInDays($campaign->end_date)) }}</p>
                                         <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Hari Lagi</p>
                                     </div>
                                 </div>
