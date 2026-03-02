@@ -9,30 +9,41 @@ use Illuminate\Support\Facades\Storage;
 class EventController extends Controller
 {
     // --- ADMIN FUNCTIONS ---
-    public function index()
+    public function index(Request $request)
     {
-        $events = Event::latest()->paginate(10);
+        $query = Event::latest();
+
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $events = $query->paginate(10);
         return view('admin.event.index', compact('events'));
     }
 
     public function create()
     {
-        return view('admin.event.create');
+        $categories = \App\Models\Category::all();
+        $campaigns = \App\Models\Campaign::where('status', 'active')->get();
+        return view('admin.event.create', compact('categories', 'campaigns'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
+            'campaign_id' => 'nullable|exists:campaigns,id',
             'title' => 'required|string|max:255',
             'description' => 'required',
-            'event_date' => 'required|date',
+            'event_date' => 'required|date|after:today',
             'location' => 'required|string',
             'category' => 'required',
-            'organizer' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'organizer' => 'required|string',
+            'quota' => 'nullable|integer|min:1',
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
         $data = $request->all();
+        $data['status'] = $request->status ?? 'active';
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('events', 'public');
@@ -45,18 +56,28 @@ class EventController extends Controller
 
     public function edit(Event $event)
     {
-        return view('admin.event.edit', compact('event'));
+        $categories = \App\Models\Category::all();
+        $campaigns = \App\Models\Campaign::where('status', 'active')->get();
+        return view('admin.event.edit', [
+            'event' => $event,
+            'categories' => $categories,
+            'campaigns' => $campaigns
+        ]);
     }
 
     public function update(Request $request, Event $event)
     {
         $request->validate([
+            'campaign_id' => 'nullable|exists:campaigns,id',
             'title' => 'required|string|max:255',
             'description' => 'required',
             'event_date' => 'required|date',
             'location' => 'required|string',
             'category' => 'required',
-            'organizer' => 'required',
+            'organizer' => 'required|string',
+            'quota' => 'nullable|integer|min:1',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'status' => 'required|in:active,inactive,completed'
         ]);
 
         $data = $request->all();
@@ -80,10 +101,22 @@ class EventController extends Controller
     }
 
     // --- PUBLIC FUNCTIONS ---
-    public function publicIndex()
+    public function publicIndex(Request $request)
     {
-        $events = Event::where('status', 'active')->latest()->get();
-        return view('landing_page.event.index', compact('events'));
+        $query = Event::where('status', 'active')->latest();
+
+        if ($request->has('category') && $request->category != 'Semua') {
+            $query->where('category', $request->category);
+        }
+
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $events = $query->get();
+        $categories = \App\Models\Category::all();
+
+        return view('landing_page.event.index', compact('events', 'categories'));
     }
 
     public function publicShow($slug)

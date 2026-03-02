@@ -9,112 +9,161 @@
             <!-- Breadcrumb -->
             <nav class="flex mb-8 text-sm font-medium text-zinc-400" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                    <li><a href="/" class="hover:text-maroon-700">Beranda</a></li>
+                    <li><a href="/" class="hover:text-maroon-700 transition">Beranda</a></li>
                     <li><span class="mx-2">/</span></li>
-                    <li><a href="{{ route('event.index') }}" class="hover:text-maroon-700">Event</a></li>
+                    <li><a href="{{ route('event.index') }}" class="hover:text-maroon-700 transition">Event</a></li>
                     <li><span class="mx-2">/</span></li>
-                    <li class="text-zinc-800 truncate">{{ $event->title }}</li>
+                    <li class="text-zinc-800 truncate max-w-[200px] md:max-w-none">{{ $event->title }}</li>
                 </ol>
             </nav>
 
             <div class="grid lg:grid-cols-3 gap-12">
-                <!-- Sisi Kiri: Detail Konten -->
+                <!-- Sisi Kiri: Konten Utama -->
                 <div class="lg:col-span-2 space-y-10">
-                    <div class="relative rounded-[3rem] overflow-hidden shadow-2xl aspect-[21/9]">
-                        @if($event->image)
-                            <img src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->title }}" class="w-full h-full object-cover">
-                        @else
-                            <div class="w-full h-full bg-zinc-200 flex items-center justify-center font-bold text-zinc-400">NusaFund</div>
-                        @endif
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                        <div class="absolute bottom-8 left-8 right-8 flex flex-wrap gap-4 items-center">
-                            <span class="bg-amber-500 text-maroon-950 text-xs font-black px-5 py-2 rounded-full uppercase tracking-widest shadow-xl">#{{ $event->category }}</span>
-                            <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-5 py-2 rounded-full uppercase tracking-widest border border-white/30">{{ $event->organizer }}</span>
+                    <!-- Hero Image & Badge -->
+                    <div class="space-y-8">
+                        <div class="relative rounded-[3rem] overflow-hidden shadow-2xl aspect-video border-8 border-white">
+                            @php
+                                $eventImage = $event->image;
+                                if ($eventImage && !filter_var($eventImage, FILTER_VALIDATE_URL)) {
+                                    $eventImage = asset('storage/' . $eventImage);
+                                } else {
+                                    $eventImage = $eventImage ?: asset('images/nusafac.png');
+                                }
+                            @endphp
+                            <img src="{{ $eventImage }}" alt="{{ $event->title }}" class="w-full h-full object-cover">
+                            
+                            <div class="absolute top-6 left-6">
+                                <span class="bg-maroon-600/90 backdrop-blur-md text-white text-xs font-black px-6 py-2.5 rounded-full uppercase tracking-widest shadow-lg">{{ $event->category }}</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <h1 class="text-3xl md:text-5xl font-black text-zinc-900 leading-tight tracking-tight">{{ $event->title }}</h1>
+                            <div class="flex flex-wrap gap-6 items-center text-zinc-500 font-bold text-sm">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-maroon-50 flex items-center justify-center text-maroon-600">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                    </div>
+                                    Oleh: {{ $event->organizer }}
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    </div>
+                                    {{ $event->location }}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Description -->
+                    <div class="bg-white p-10 md:p-12 rounded-[3rem] border border-zinc-100 shadow-sm space-y-8">
+                        <h2 class="text-2xl font-black text-zinc-900 flex items-center gap-3">
+                            <span class="w-2 h-8 bg-maroon-700 rounded-full"></span>
+                            Tentang Event
+                        </h2>
+                        <div class="prose prose-zinc lg:prose-xl max-w-none text-zinc-600 leading-relaxed whitespace-pre-line font-medium">
+                            {{ $event->description }}
+                        </div>
+                    </div>
+
+                    @if($event->campaign)
+                    <!-- Related Campaign Section -->
                     <div class="space-y-6">
-                        <h1 class="text-3xl md:text-5xl font-black text-zinc-900 leading-tight">{{ $event->title }}</h1>
+                        <h3 class="text-sm font-black text-zinc-400 uppercase tracking-[0.3em] pl-2">Event ini merupakan bagian dari:</h3>
                         
-                        <!-- Event Info Quick Stats -->
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div class="bg-white p-6 rounded-3xl border border-zinc-100 shadow-sm flex flex-col items-center text-center">
-                                <div class="w-10 h-10 bg-maroon-50 text-maroon-700 rounded-xl flex items-center justify-center mb-3">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <div class="bg-white rounded-[3rem] border border-zinc-100 shadow-xl overflow-hidden group hover:shadow-2xl transition duration-500">
+                            <div class="flex flex-col md:flex-row">
+                                <div class="md:w-1/3 aspect-video md:aspect-square overflow-hidden">
+                                    @php
+                                        $campImage = $event->campaign->image;
+                                        if ($campImage && !filter_var($campImage, FILTER_VALIDATE_URL)) {
+                                            $campImage = asset('storage/' . $campImage);
+                                        } else {
+                                            $campImage = $campImage ?: asset('images/nusafac.png');
+                                        }
+                                    @endphp
+                                    <img src="{{ $campImage }}" alt="{{ $event->campaign->title }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
                                 </div>
-                                <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Tanggal</p>
-                                <p class="text-sm font-bold text-zinc-900">{{ $event->event_date->format('d M Y') }}</p>
-                            </div>
-                            <div class="bg-white p-6 rounded-3xl border border-zinc-100 shadow-sm flex flex-col items-center text-center">
-                                <div class="w-10 h-10 bg-maroon-50 text-maroon-700 rounded-xl flex items-center justify-center mb-3">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                                <div class="md:w-2/3 p-8 flex flex-col justify-center space-y-6">
+                                    <div>
+                                        <span class="bg-amber-100 text-amber-700 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-3 inline-block">Campaign Terkait</span>
+                                        <h4 class="text-xl font-black text-zinc-900 group-hover:text-maroon-700 transition leading-tight">{{ $event->campaign->title }}</h4>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <div>
+                                            <div class="flex justify-between items-end mb-2">
+                                                <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Terkumpul</p>
+                                                <p class="text-maroon-700 font-black text-sm">Rp {{ number_format($event->campaign->collected_amount, 0, ',', '.') }}</p>
+                                            </div>
+                                            <div class="w-full bg-zinc-100 h-2 rounded-full overflow-hidden">
+                                                @php $percent = ($event->campaign->collected_amount / $event->campaign->target_amount) * 100; @endphp
+                                                <div class="bg-maroon-600 h-full rounded-full transition-all duration-1000" style="width: {{ min($percent, 100) }}%"></div>
+                                            </div>
+                                            <div class="flex justify-between items-center mt-2 text-[9px] font-black text-zinc-400 uppercase tracking-widest">
+                                                <span>Target: {{ $event->campaign->target_amount > 0 ? 'Rp ' . number_format($event->campaign->target_amount, 0, ',', '.') : '∞ Tidak Terbatas' }}</span>
+                                                <span class="flex items-center gap-1">
+                                                    <svg class="w-3 h-3 text-maroon-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                    {{ ceil(now()->diffInDays($event->campaign->end_date)) }} Hari Lagi
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <a href="{{ route('donasi.show', $event->campaign->slug) }}" class="inline-flex items-center gap-2 text-maroon-700 font-black text-xs uppercase tracking-widest hover:gap-4 transition-all">
+                                            Donasi untuk Campaign Ini
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                        </a>
+                                    </div>
                                 </div>
-                                <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Lokasi</p>
-                                <p class="text-sm font-bold text-zinc-900 truncate px-2">{{ $event->location }}</p>
-                            </div>
-                            <div class="bg-white p-6 rounded-3xl border border-zinc-100 shadow-sm flex flex-col items-center text-center">
-                                <div class="w-10 h-10 bg-maroon-50 text-maroon-700 rounded-xl flex items-center justify-center mb-3">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </div>
-                                <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Post Pada</p>
-                                <p class="text-sm font-bold text-zinc-900">{{ $event->created_at->diffForHumans() }}</p>
-                            </div>
-                            <div class="bg-white p-6 rounded-3xl border border-zinc-100 shadow-sm flex flex-col items-center text-center">
-                                <div class="w-10 h-10 bg-maroon-50 text-maroon-700 rounded-xl flex items-center justify-center mb-3">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                                </div>
-                                <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Kuota</p>
-                                <p class="text-sm font-bold text-zinc-900">{{ $event->quota ? 'Sisa ' . $event->quota : 'Terbatas' }}</p>
                             </div>
                         </div>
                     </div>
-
-                    <div class="prose prose-zinc lg:prose-xl max-w-none text-zinc-600 space-y-8 whitespace-pre-line">
-                        {{ $event->description }}
-                    </div>
+                    @endif
                 </div>
 
-                <!-- Sisi Kanan: Widget Pendaftaran -->
+                <!-- Sisi Rapat: Sidebar Info -->
                 <div class="space-y-8">
                     <div class="sticky top-24 space-y-6">
-                        <div class="bg-white p-8 rounded-[2.5rem] border border-zinc-100 shadow-2xl space-y-8">
-                            <div class="text-center">
-                                <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2">Event Dilaksanakan Dalam</p>
-                                <div class="flex justify-center gap-3">
-                                    @php $diff = now()->diff($event->event_date); @endphp
-                                    <div class="text-center">
-                                        <div class="bg-zinc-900 text-white w-12 h-12 rounded-xl flex items-center justify-center text-xl font-black shadow-lg">{{ $diff->days }}</div>
-                                        <p class="text-[8px] font-black text-zinc-400 uppercase tracking-widest mt-1">Hari</p>
-                                    </div>
-                                    <div class="text-center text-zinc-900 font-black text-2xl mt-2">:</div>
-                                    <div class="text-center">
-                                        <div class="bg-zinc-900 text-white w-12 h-12 rounded-xl flex items-center justify-center text-xl font-black shadow-lg">{{ $diff->h }}</div>
-                                        <p class="text-[8px] font-black text-zinc-400 uppercase tracking-widest mt-1">Jam</p>
-                                    </div>
-                                    <div class="text-center text-zinc-900 font-black text-2xl mt-2">:</div>
-                                    <div class="text-center">
-                                        <div class="bg-zinc-900 text-white w-12 h-12 rounded-xl flex items-center justify-center text-xl font-black shadow-lg">{{ $diff->i }}</div>
-                                        <p class="text-[8px] font-black text-zinc-400 uppercase tracking-widest mt-1">Men</p>
-                                    </div>
+                        <!-- Date & Registration Card -->
+                        <div class="bg-white p-10 rounded-[3rem] border border-zinc-100 shadow-2xl space-y-8">
+                            <div class="flex items-center gap-6">
+                                <div class="bg-maroon-50 rounded-3xl p-4 text-center min-w-[80px]">
+                                    <p class="text-3xl font-black text-maroon-700 leading-none">{{ $event->event_date->format('d') }}</p>
+                                    <p class="text-[10px] font-black text-maroon-400 uppercase tracking-widest mt-1">{{ $event->event_date->format('M Y') }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Waktu Pelaksanaan</p>
+                                    <p class="text-lg font-black text-zinc-900">Mulai 09:00 WIB</p>
                                 </div>
                             </div>
 
-                            <a href="#" class="block w-full text-center bg-maroon-700 hover:bg-maroon-800 text-white py-5 rounded-2xl font-black text-xl shadow-xl shadow-maroon-900/20 transition transform active:scale-95 group">
-                                Ikuti Event Sekarang
+                            <div class="space-y-4 pt-6 border-t border-zinc-50">
+                                <div class="flex justify-between text-sm">
+                                    <span class="font-bold text-zinc-400 uppercase tracking-widest text-[10px]">Status</span>
+                                    <span class="font-black text-green-600 uppercase tracking-widest text-[10px]">Pendaftaran Dibuka</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="font-bold text-zinc-400 uppercase tracking-widest text-[10px]">Kuota Peserta</span>
+                                    <span class="font-black text-zinc-900 uppercase tracking-widest text-[10px]">{{ $event->quota ?: 'Terbuka Umum' }}</span>
+                                </div>
+                            </div>
+
+                            <a href="#" class="block w-full text-center bg-zinc-900 text-white hover:bg-maroon-700 py-5 rounded-3xl font-black text-lg shadow-xl shadow-zinc-900/20 transition transform active:scale-95 group">
+                                Daftar Sekarang
                                 <svg class="w-6 h-6 inline-block ml-2 group-hover:translate-x-2 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                             </a>
+                        </div>
 
-                            <div class="pt-6 border-t border-zinc-100 space-y-6">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 rounded-2xl bg-zinc-50 flex items-center justify-center text-maroon-700">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Penyelenggara</p>
-                                        <p class="text-sm font-bold text-zinc-900 leading-tight">{{ $event->organizer }}</p>
-                                    </div>
-                                </div>
+                        <!-- Info Tambahan -->
+                        <div class="bg-maroon-900 text-white p-10 rounded-[3rem] shadow-xl space-y-6 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full translate-x-16 -translate-y-16"></div>
+                            <div class="flex items-center gap-3 text-amber-400 font-black uppercase tracking-[0.2em] text-[10px] relative z-10">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Informasi
                             </div>
+                            <p class="text-xs text-maroon-100 leading-relaxed relative z-10 font-medium">Pastikan Anda hadir 15 menit sebelum acara dimulai untuk proses registrasi ulang di lokasi.</p>
                         </div>
                     </div>
                 </div>

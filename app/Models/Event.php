@@ -11,6 +11,7 @@ class Event extends Model
     use HasFactory;
 
     protected $fillable = [
+        'campaign_id',
         'title',
         'slug',
         'description',
@@ -26,6 +27,11 @@ class Event extends Model
     protected $casts = [
         'event_date' => 'date',
     ];
+
+    public function campaign()
+    {
+        return $this->belongsTo(Campaign::class);
+    }
 
     protected static function boot()
     {

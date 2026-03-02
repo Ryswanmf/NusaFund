@@ -1,97 +1,96 @@
 @extends('layouts.landing')
 
-@section('title', 'Event Kebaikan - NusaFund')
+@section('title', 'Event Kemanusiaan - NusaFund')
 
 @section('content')
     <div class="bg-zinc-50 py-12 md:py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Header -->
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                 <div class="max-w-2xl">
-                    <span class="inline-block bg-maroon-50 text-maroon-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-4">#AksiNyata</span>
-                    <h1 class="text-3xl md:text-5xl font-black text-zinc-900 mb-4 tracking-tight">Event & <span class="text-maroon-700">Aksi Sosial</span></h1>
-                    <p class="text-zinc-500 text-lg leading-relaxed">Bergabunglah dalam berbagai kegiatan sosial, kerelawanan, dan webinar inspiratif untuk memberikan dampak langsung bagi masyarakat.</p>
+                    <h1 class="text-3xl md:text-5xl font-black text-zinc-900 mb-4 tracking-tight">Agenda <span class="text-maroon-700">Kebaikan</span></h1>
+                    <p class="text-zinc-500 text-lg leading-relaxed">Ikuti berbagai kegiatan sosial, seminar, dan aksi nyata untuk menebar manfaat lebih luas.</p>
                 </div>
                 
-                <form action="{{ route('event.index') }}" method="GET" class="hidden md:flex items-center gap-3">
-                    <div class="relative">
-                        <input type="text" name="search" placeholder="Cari event..." class="bg-white border border-zinc-200 rounded-2xl py-3 pl-12 pr-6 text-sm focus:ring-2 focus:ring-maroon-500 focus:border-transparent transition-all w-64 shadow-sm">
-                        <svg class="w-5 h-5 text-zinc-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </div>
+                <!-- Filter/Search Bar Desktop -->
+                <form action="{{ route('event.index') }}" method="GET" class="relative group">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari event..." class="bg-white border border-zinc-200 rounded-2xl py-4 pl-14 pr-6 text-sm focus:ring-2 focus:ring-maroon-500 focus:border-transparent transition-all w-full md:w-80 shadow-sm font-bold">
+                    <svg class="w-6 h-6 text-zinc-400 absolute left-5 top-1/2 -translate-y-1/2 group-focus-within:text-maroon-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </form>
             </div>
 
             <!-- Categories Chips -->
             <div class="flex flex-wrap gap-3 mb-12">
-                <a href="{{ route('event.index') }}" class="px-6 py-2.5 rounded-full font-bold text-sm transition transform active:scale-95 {{ !request('category') ? 'bg-maroon-700 text-white shadow-lg' : 'bg-white border border-zinc-200 text-zinc-600' }}">Semua Event</a>
-                @foreach(['Relawan', 'Webinar', 'Lingkungan', 'Workshop', 'Penyaluran'] as $cat)
-                    <a href="{{ route('event.index', ['category' => $cat]) }}" 
-                       class="px-6 py-2.5 rounded-full font-bold text-sm transition transform active:scale-95 {{ request('category') == $cat ? 'bg-maroon-700 text-white shadow-lg' : 'bg-white border border-zinc-200 text-zinc-600 hover:border-maroon-300' }}">
-                        {{ $cat }}
+                <a href="{{ route('event.index') }}" class="px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest transition transform active:scale-95 {{ !request('category') || request('category') == 'Semua' ? 'bg-maroon-800 text-white shadow-xl shadow-maroon-900/20' : 'bg-white border border-zinc-200 text-zinc-500 hover:border-maroon-300' }}">
+                    Semua
+                </a>
+                @foreach($categories as $cat)
+                    <a href="{{ route('event.index', ['category' => $cat->name, 'search' => request('search')]) }}" 
+                       class="px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest transition transform active:scale-95 {{ request('category') == $cat->name ? 'bg-maroon-800 text-white shadow-xl shadow-maroon-900/20' : 'bg-white border border-zinc-200 text-zinc-500 hover:border-maroon-300 hover:text-maroon-700' }}">
+                        {{ $cat->name }}
                     </a>
                 @endforeach
             </div>
 
             <!-- Event Grid -->
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-                @forelse($events as $event)
-                <div class="bg-white rounded-[2.5rem] overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col h-full group">
-                    <div class="relative overflow-hidden aspect-[4/3]">
-                        @if($event->image)
-                            <img src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
-                        @else
-                            <div class="w-full h-full bg-zinc-100 flex items-center justify-center text-zinc-400 font-bold">NusaFund</div>
-                        @endif
-                        <div class="absolute top-5 left-5">
-                            <span class="bg-maroon-600/90 backdrop-blur-md text-white text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">{{ $event->category }}</span>
-                        </div>
-                        <div class="absolute bottom-5 left-5 right-5">
-                            <div class="bg-white/90 backdrop-blur-md p-4 rounded-2xl flex items-center gap-4 shadow-xl">
-                                <div class="bg-maroon-50 text-maroon-700 w-12 h-12 rounded-xl flex flex-col items-center justify-center">
-                                    <span class="text-lg font-black leading-none">{{ $event->event_date->format('d') }}</span>
-                                    <span class="text-[8px] font-black uppercase">{{ $event->event_date->format('M') }}</span>
+                @forelse($events as $item)
+                <div class="bg-white rounded-[3rem] overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col h-full group">
+                    <div class="relative overflow-hidden aspect-[4/5]">
+                        @php
+                            $eventImage = $item->image;
+                            if ($eventImage && !filter_var($eventImage, FILTER_VALIDATE_URL)) {
+                                $eventImage = asset('storage/' . $eventImage);
+                            } else {
+                                $eventImage = $eventImage ?: asset('images/nusafac.png');
+                            }
+                        @endphp
+                        <img src="{{ $eventImage }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+                        
+                        <!-- Overlay Info -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 translate-y-4 group-hover:translate-y-0 transition duration-500">
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-2 text-white/80 text-[10px] font-black uppercase tracking-widest">
+                                    <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    {{ $item->location }}
                                 </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest truncate">{{ $event->location }}</p>
-                                    <p class="text-xs font-bold text-zinc-900 truncate">{{ $event->organizer }}</p>
-                                </div>
+                                <h3 class="text-2xl font-black text-white leading-tight line-clamp-2">{{ $item->title }}</h3>
                             </div>
+                        </div>
+
+                        <!-- Date Badge -->
+                        <div class="absolute top-6 left-6 bg-white rounded-2xl p-3 text-center shadow-xl min-w-[60px]">
+                            <p class="text-xl font-black text-maroon-700 leading-none">{{ $item->event_date->format('d') }}</p>
+                            <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{{ $item->event_date->format('M') }}</p>
+                        </div>
+
+                        <div class="absolute top-6 right-6">
+                            <span class="bg-maroon-600/90 backdrop-blur-md text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-lg">{{ $item->category }}</span>
                         </div>
                     </div>
-                    <div class="p-8 flex flex-col flex-1">
-                        <a href="{{ route('event.show', $event->slug) }}" class="group/title">
-                            <h3 class="text-xl font-bold text-zinc-900 mb-6 line-clamp-2 group-hover/title:text-maroon-700 transition">{{ $event->title }}</h3>
-                        </a>
-                        
-                        <div class="mt-auto pt-6 border-t border-zinc-50 flex items-center justify-between">
-                            <div class="flex -space-x-3 overflow-hidden">
-                                @foreach([1,2,3] as $i)
-                                    <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="https://i.pravatar.cc/150?u={{ $event->id + $i }}" alt="">
-                                @endforeach
-                                <div class="flex items-center justify-center h-8 w-8 rounded-full bg-zinc-100 ring-2 ring-white text-[10px] font-bold text-zinc-500">+{{ $event->quota ?? rand(10, 50) }}</div>
+                    <div class="p-8 space-y-6">
+                        <div class="flex items-center justify-between text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                {{ $item->status == 'active' ? 'Pendaftaran Dibuka' : $item->status }}
                             </div>
-                            <a href="{{ route('event.show', $event->slug) }}" class="bg-maroon-50 text-maroon-700 hover:bg-maroon-700 hover:text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-95">Ikuti Event</a>
+                            <div>{{ $item->quota ? $item->quota . ' Kuota' : 'Kuota Tak Terbatas' }}</div>
                         </div>
+                        
+                        <a href="{{ route('event.show', $item->slug) }}" class="block w-full text-center bg-zinc-900 text-white hover:bg-maroon-700 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-300 transform active:scale-95">
+                            Lihat Detail Event
+                        </a>
                     </div>
                 </div>
                 @empty
-                <div class="col-span-full py-20 text-center">
-                    <p class="text-zinc-400 font-medium">Belum ada event aktif di kategori ini.</p>
+                <div class="col-span-full py-32 text-center bg-white rounded-[3rem] border border-dashed border-zinc-200">
+                    <div class="w-24 h-24 bg-zinc-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-12 h-12 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-zinc-900 mb-2">Event Tidak Ditemukan</h3>
+                    <p class="text-zinc-500 font-medium">Belum ada agenda kegiatan untuk kategori ini.</p>
                 </div>
                 @endforelse
-            </div>
-
-            <!-- Join as Organizer -->
-            <div class="mt-24 bg-zinc-900 rounded-[3rem] p-10 md:p-20 text-white relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-maroon-600/10 rounded-full translate-x-1/2 -translate-y-1/2"></div>
-                <div class="relative z-10 max-w-2xl">
-                    <h2 class="text-3xl md:text-4xl font-black mb-6 leading-tight">Punya Ide Aksi Sosial? <br>Ayo Kolaborasi!</h2>
-                    <p class="text-zinc-400 text-lg mb-10 leading-relaxed">Daftarkan komunitas atau organisasi Anda sebagai mitra penyelenggara event di NusaFund dan temukan ribuan relawan yang siap membantu.</p>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#" class="bg-amber-500 hover:bg-amber-400 text-maroon-950 px-8 py-4 rounded-2xl font-black transition text-center shadow-lg shadow-amber-900/20">Buat Event Sekarang</a>
-                        <a href="#" class="bg-white/10 hover:bg-white/20 px-8 py-4 rounded-2xl font-bold transition text-center border border-white/20">Panduan Penyelenggara</a>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
