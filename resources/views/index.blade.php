@@ -3,129 +3,65 @@
 @section('title', 'NusaFund - Kebaikan untuk Semua')
 
 @section('content')
-    <!-- Hero Section Slider -->
-    <section class="relative bg-maroon-800 text-white overflow-hidden" 
-             x-data="{ 
-                activeSlide: 1,
-                timer: null,
-                slides: [
-                    @foreach($banners as $b)
-                    {
-                        id: {{ $loop->iteration }},
-                        tag: '{{ $b->tag }}',
-                        title: '{!! $b->title !!}',
-                        desc: '{{ $b->description }}',
-                        image: '{{ filter_var($b->image, FILTER_VALIDATE_URL) ? $b->image : asset('storage/' . $b->image) }}',
-                        cta: '{{ $b->cta_text }}',
-                        link: '{{ $b->cta_link }}'
-                    },
-                    @endforeach
-                ],
-                next() { 
-                    this.activeSlide = this.activeSlide === this.slides.length ? 1 : this.activeSlide + 1 
-                },
-                prev() { 
-                    this.activeSlide = this.activeSlide === 1 ? this.slides.length : this.activeSlide - 1 
-                },
-                startTimer() {
-                    this.timer = setInterval(() => {
-                        this.next();
-                    }, 6000);
-                },
-                stopTimer() {
-                    clearInterval(this.timer);
-                }
-             }" 
-             x-init="startTimer()"
-             @mouseenter="stopTimer()" 
-             @mouseleave="startTimer()">
-        
-        <!-- Slider Content -->
-        <div class="relative min-h-[650px] lg:min-h-[750px] flex items-center">
-            <template x-for="slide in slides" :key="slide.id">
-                <div x-show="activeSlide === slide.id" 
-                     x-transition:enter="transition ease-out duration-1000"
-                     x-transition:enter-start="opacity-0 transform translate-x-full"
-                     x-transition:enter-end="opacity-100 transform translate-x-0"
-                     x-transition:leave="transition ease-in duration-700"
-                     x-transition:leave-start="opacity-100 transform translate-x-0"
-                     x-transition:leave-end="opacity-0 transform -translate-x-full"
-                     class="absolute inset-0 w-full h-full flex items-center">
-                    
-                    <!-- Background Decorative Overlay -->
-                    <div class="absolute inset-0 bg-maroon-800">
-                        <div class="absolute inset-0 opacity-20 pointer-events-none">
-                            <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                                <circle cx="100" cy="0" r="40" fill="white" />
-                                <circle cx="0" cy="100" r="30" fill="#FBBF24" />
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-                        <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-                            <!-- Text Content -->
-                            <div class="text-center lg:text-left order-2 lg:order-1">
-                                <span class="inline-block bg-amber-500/20 text-amber-400 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-[0.2em] mb-8 border border-amber-500/30" x-text="slide.tag"></span>
-                                <h1 class="text-4xl md:text-5xl lg:text-7xl font-black mb-8 leading-[1.1] tracking-tight" x-html="slide.title"></h1>
-                                <p class="text-lg md:text-xl text-maroon-50 mb-12 max-w-xl mx-auto lg:mx-0 leading-relaxed opacity-80 font-medium" x-text="slide.desc"></p>
-                                <div class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
-                                    <a :href="slide.link" class="bg-amber-500 hover:bg-amber-400 text-maroon-950 px-12 py-5 rounded-2xl font-black text-xl shadow-2xl shadow-amber-900/40 transition transform hover:-translate-y-1 active:scale-95">
-                                        <span x-text="slide.cta"></span>
-                                    </a>
-                                    <a href="{{ route('about') }}" class="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 px-12 py-5 rounded-2xl font-bold text-xl transition active:scale-95">
-                                        Tentang Kami
-                                    </a>
-                                </div>
-                            </div>
-                            
-                            <!-- Image Content -->
-                            <div class="hidden lg:block order-1 lg:order-2 relative group">
-                                <div class="relative z-10 rounded-[4rem] overflow-hidden shadow-[0_35px_60px_-15px_rgba(0,0,0,0.5)] border-[12px] border-white/10 aspect-[4/3] transform transition duration-1000 group-hover:rotate-0 rotate-2">
-                                    <img :src="slide.image" :alt="slide.tag" class="w-full h-full object-cover">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-maroon-900/40 via-transparent to-transparent"></div>
-                                </div>
-                                <!-- Floating Card -->
-                                <div class="absolute -bottom-10 -left-10 z-20 bg-white p-8 rounded-[2.5rem] shadow-2xl text-maroon-950 flex items-center gap-6 animate-bounce-slow border border-zinc-100">
-                                    <div class="bg-green-100 w-16 h-16 rounded-3xl flex items-center justify-center shadow-inner">
-                                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400 mb-1">Status Keamanan</p>
-                                        <p class="text-2xl font-black tracking-tight">Verified <span class="text-maroon-700">Amanah</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </template>
+    @if($hero)
+    <!-- Static Hero Section -->
+    <section class="relative bg-maroon-800 text-white overflow-hidden">
+        <!-- Background Decorative Overlay -->
+        <div class="absolute inset-0 bg-maroon-800">
+            <div class="absolute inset-0 opacity-20 pointer-events-none">
+                <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle cx="100" cy="0" r="40" fill="white" />
+                    <circle cx="0" cy="100" r="30" fill="#FBBF24" />
+                </svg>
+            </div>
         </div>
 
-        <!-- Slider Controls & Indicators -->
-        <div class="absolute bottom-12 left-0 right-0 z-30">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
-                <!-- Indicators -->
-                <div class="flex gap-3 order-2 md:order-1">
-                    <template x-for="slide in slides" :key="slide.id">
-                        <button @click="activeSlide = slide.id" 
-                                :class="activeSlide === slide.id ? 'w-16 bg-amber-500' : 'w-3 bg-white/20 hover:bg-white/40'" 
-                                class="h-3 rounded-full transition-all duration-700 shadow-lg"></button>
-                    </template>
-                </div>
-
-                <!-- Arrow Navigation -->
-                <div class="flex gap-4 order-1 md:order-2">
-                    <button @click="prev()" class="w-14 h-14 rounded-2xl bg-white/10 hover:bg-amber-500 hover:text-maroon-950 border border-white/20 flex items-center justify-center transition-all duration-300 backdrop-blur-md group">
-                        <svg class="w-6 h-6 transform group-hover:-translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg>
-                    </button>
-                    <button @click="next()" class="w-14 h-14 rounded-2xl bg-white/10 hover:bg-amber-500 hover:text-maroon-950 border border-white/20 flex items-center justify-center transition-all duration-300 backdrop-blur-md group">
-                        <svg class="w-6 h-6 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
+        <div class="relative min-h-[550px] lg:min-h-[700px] flex items-center">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 py-12 lg:py-0">
+                <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                    <!-- Text Content -->
+                    <div class="text-center lg:text-left order-2 lg:order-1">
+                        <span class="inline-block bg-amber-500/20 text-amber-400 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-[0.2em] mb-6 lg:mb-8 border border-amber-500/30">
+                            {{ $hero->tag }}
+                        </span>
+                        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black mb-6 lg:mb-8 leading-[1.1] tracking-tight">
+                            {!! $hero->title !!}
+                        </h1>
+                        <p class="text-lg md:text-xl text-maroon-50 mb-10 lg:mb-12 max-w-xl mx-auto lg:mx-0 leading-relaxed opacity-80 font-medium">
+                            {{ $hero->description }}
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
+                            <a href="{{ $hero->cta_link }}" class="bg-amber-500 hover:bg-amber-400 text-maroon-950 px-10 lg:px-12 py-4 lg:py-5 rounded-2xl font-black text-lg lg:text-xl shadow-2xl shadow-amber-900/40 transition transform hover:-translate-y-1 active:scale-95">
+                                {{ $hero->cta_text }}
+                            </a>
+                            <a href="{{ route('about') }}" class="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 px-10 lg:px-12 py-4 lg:py-5 rounded-2xl font-bold text-lg lg:text-xl transition active:scale-95">
+                                Tentang Kami
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Image Content -->
+                    <div class="order-1 lg:order-2 relative group px-4 lg:px-0">
+                        <div class="relative z-10 rounded-[3rem] lg:rounded-[4rem] overflow-hidden shadow-[0_35px_60px_-15px_rgba(0,0,0,0.5)] border-8 lg:border-[12px] border-white/10 aspect-[4/3] transform transition duration-1000 rotate-2">
+                            <img src="{{ filter_var($hero->image, FILTER_VALIDATE_URL) ? $hero->image : asset('storage/' . $hero->image) }}" alt="{{ $hero->tag }}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-maroon-900/40 via-transparent to-transparent"></div>
+                        </div>
+                        <!-- Floating Card -->
+                        <div class="absolute -bottom-6 lg:-bottom-10 -left-2 lg:-left-10 z-20 bg-white p-5 lg:p-8 rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl text-maroon-950 flex items-center gap-4 lg:gap-6 animate-bounce-slow border border-zinc-100">
+                            <div class="bg-green-100 w-12 h-12 lg:w-16 lg:h-16 rounded-2xl lg:rounded-3xl flex items-center justify-center shadow-inner">
+                                <svg class="w-6 h-6 lg:w-8 lg:h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-[8px] lg:text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400 mb-0.5 lg:mb-1">Status Keamanan</p>
+                                <p class="text-xl lg:text-2xl font-black tracking-tight">Verified <span class="text-maroon-700">Amanah</span></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+    @endif
 
     <!-- Stats Section -->
     <section class="bg-white py-16 border-b border-zinc-100 relative z-20">

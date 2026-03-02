@@ -10,60 +10,44 @@ class HeroBannerController extends Controller
 {
     public function index()
     {
-        $banners = HeroBanner::orderBy('order')->get();
-        return view('admin.hero.index', compact('banners'));
+        // Langsung arahkan ke fungsi edit untuk data pertama
+        $hero = HeroBanner::firstOrCreate(['id' => 1], [
+            'tag' => '#NusaFund',
+            'title' => 'Kebaikan <span class="text-amber-400">Tanpa Batas</span>',
+            'description' => 'Salurkan bantuan Anda untuk mereka yang membutuhkan dengan cepat, aman, dan transparan.',
+            'cta_text' => 'Mulai Berdonasi',
+            'cta_link' => '/donasi',
+            'order' => 1,
+            'is_active' => true
+        ]);
+
+        return view('admin.hero.edit', compact('hero'));
     }
 
-    public function create()
+    public function update(Request $request)
     {
-        return view('admin.hero.create');
-    }
+        $hero = HeroBanner::firstOrCreate(['id' => 1]);
 
-    public function store(Request $request)
-    {
         $request->validate([
-            'tag' => 'required|string',
+            'tag' => 'required|string|max:255',
             'title' => 'required|string',
-            'description' => 'required',
-            'cta_text' => 'required',
-            'cta_link' => 'required',
-            'image' => 'nullable|string|or:image|max:2048' // Mendukung URL atau Upload
+            'description' => 'required|string',
+            'cta_text' => 'required|string|max:255',
+            'cta_link' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $data = $request->all();
+
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('hero', 'public');
-        }
-
-        HeroBanner::create($data);
-        return redirect()->route('admin.hero.index')->with('success', 'Slide banner berhasil ditambahkan!');
-    }
-
-    public function edit(HeroBanner $hero)
-    {
-        return view('admin.hero.create', ['banner' => $hero]);
-    }
-
-    public function update(Request $request, HeroBanner $hero)
-    {
-        $data = $request->all();
-        if ($request->hasFile('image')) {
-            if ($hero->image && !filter_var($hero->image, FILTER_VALIDATE_URL)) {
+            if ($hero->image && Storage::disk('public')->exists($hero->image)) {
                 Storage::disk('public')->delete($hero->image);
             }
             $data['image'] = $request->file('image')->store('hero', 'public');
         }
 
         $hero->update($data);
-        return redirect()->route('admin.hero.index')->with('success', 'Slide banner berhasil diperbarui!');
-    }
 
-    public function destroy(HeroBanner $hero)
-    {
-        if ($hero->image && !filter_var($hero->image, FILTER_VALIDATE_URL)) {
-            Storage::disk('public')->delete($hero->image);
-        }
-        $hero->delete();
-        return redirect()->route('admin.hero.index')->with('success', 'Slide banner dihapus!');
+        return redirect()->back()->with('success', 'Hero Section berhasil diperbarui!');
     }
 }

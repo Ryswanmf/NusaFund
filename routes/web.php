@@ -63,7 +63,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::resource('donasi', CampaignController::class);
     Route::resource('event', EventController::class);
     Route::resource('zakat', ZakatController::class);
-    Route::resource('hero', HeroBannerController::class);
     Route::resource('testimoni', TestimonialController::class);
     Route::resource('donatur', \App\Http\Controllers\UserController::class)->parameters(['donatur' => 'donatur']);
     Route::resource('kategori', CategoryController::class)->parameters(['kategori' => 'category']);
@@ -72,6 +71,11 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::resource('kebijakan-privasi', \App\Http\Controllers\PrivacyPolicyController::class);
 
     // Custom Admin Routes
+    Route::controller(HeroBannerController::class)->prefix('hero')->name('hero.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::put('/', 'update')->name('update');
+    });
+
     Route::controller(FundraisingController::class)->prefix('galang-dana')->name('galang_dana.')->group(function () {
         Route::get('/', 'adminIndex')->name('index');
         Route::get('/{fundraising}/edit', 'edit')->name('edit');
