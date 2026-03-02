@@ -9,9 +9,15 @@ use Illuminate\Support\Facades\Storage;
 class ZakatController extends Controller
 {
     // --- ADMIN FUNCTIONS ---
-    public function index()
+    public function index(Request $request)
     {
-        $zakats = Zakat::latest()->paginate(10);
+        $query = Zakat::latest();
+
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $zakats = $query->paginate(10);
         return view('admin.zakat.index', compact('zakats'));
     }
 
@@ -26,11 +32,12 @@ class ZakatController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required',
             'institution' => 'required|string',
-            'asnaf_category' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'asnaf_category' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
         $data = $request->all();
+        $data['status'] = $request->status ?? 'active';
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('zakats', 'public');
@@ -43,7 +50,9 @@ class ZakatController extends Controller
 
     public function edit(Zakat $zakat)
     {
-        return view('admin.zakat.edit', compact('zakat'));
+        return view('admin.zakat.edit', [
+            'zakat' => $zakat
+        ]);
     }
 
     public function update(Request $request, Zakat $zakat)
@@ -51,14 +60,18 @@ class ZakatController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
-            'institution' => 'required',
-            'asnaf_category' => 'required',
+            'institution' => 'required|string',
+            'asnaf_category' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'status' => 'required|in:active,inactive'
         ]);
 
         $data = $request->all();
 
         if ($request->hasFile('image')) {
-            if ($zakat->image) Storage::disk('public')->delete($zakat->image);
+            if ($zakat->image && Storage::disk('public')->exists($zakat->image)) {
+                Storage::disk('public')->delete($zakat->image);
+            }
             $data['image'] = $request->file('image')->store('zakats', 'public');
         }
 
@@ -69,16 +82,29 @@ class ZakatController extends Controller
 
     public function destroy(Zakat $zakat)
     {
-        if ($zakat->image) Storage::disk('public')->delete($zakat->image);
+        if ($zakat->image && Storage::disk('public')->exists($zakat->image)) {
+            Storage::disk('public')->delete($zakat->image);
+        }
         $zakat->delete();
 
         return redirect()->route('admin.zakat.index')->with('success', 'Program Zakat berhasil dihapus!');
     }
 
     // --- PUBLIC FUNCTIONS ---
-    public function publicIndex()
+    public function publicIndex(Request $request)
     {
-        $zakats = Zakat::where('status', 'active')->latest()->get();
+        $query = Zakat::where('status', 'active')->latest();
+
+        if ($request->has('category') && $request->category != 'Semua') {
+            $query->where('asnaf_category', $request->category);
+        }
+
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $zakats = $query->get();
+        
         return view('landing_page.zakat.index', compact('zakats'));
     }
 }

@@ -4,8 +4,8 @@
 <div class="space-y-10">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-            <h1 class="text-3xl font-black text-zinc-900 tracking-tight">Kelola <span class="text-maroon-700">Program Zakat</span></h1>
-            <p class="text-zinc-500 mt-2 font-medium">Daftar program penyaluran zakat produktif dan sosial.</p>
+            <h1 class="text-3xl font-black text-zinc-900 tracking-tight">Kelola <span class="text-maroon-700">Zakat</span></h1>
+            <p class="text-zinc-500 mt-2 font-medium">Daftar program penerimaan zakat dan asnaf.</p>
         </div>
         <a href="{{ route('admin.zakat.create') }}" class="bg-maroon-800 text-white px-8 py-4 rounded-3xl font-black text-sm hover:bg-maroon-700 transition shadow-xl shadow-maroon-900/20 flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
@@ -20,43 +20,64 @@
     </div>
     @endif
 
+    <!-- Search Section -->
+    <div class="flex justify-end">
+        <form action="{{ route('admin.zakat.index') }}" method="GET" class="relative group w-full md:w-80">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari program zakat..." class="w-full bg-white border border-zinc-200 rounded-2xl py-3 pl-12 pr-6 text-sm focus:ring-2 focus:ring-maroon-500 focus:border-transparent transition-all shadow-sm font-bold">
+            <svg class="w-5 h-5 text-zinc-400 absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-maroon-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </form>
+    </div>
+
     <div class="bg-white rounded-[3.5rem] shadow-sm border border-zinc-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-zinc-50">
                 <thead class="bg-zinc-50/50">
                     <tr>
-                        <th class="px-10 py-6 text-left text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Program</th>
-                        <th class="px-10 py-6 text-left text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Asnaf & Lembaga</th>
+                        <th class="px-10 py-6 text-left text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Program Zakat</th>
+                        <th class="px-10 py-6 text-left text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Lembaga / Asnaf</th>
                         <th class="px-10 py-6 text-left text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Terkumpul</th>
+                        <th class="px-10 py-6 text-left text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Status</th>
                         <th class="px-10 py-6 text-right text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-zinc-50">
-                    @forelse($zakats as $zakat)
+                    @forelse($zakats as $item)
                     <tr class="hover:bg-zinc-50/50 transition">
                         <td class="px-10 py-6">
                             <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 font-black">Z</div>
+                                <div class="w-16 h-12 rounded-2xl bg-zinc-100 overflow-hidden flex-shrink-0 border border-zinc-200">
+                                    @php
+                                        $zakatImage = $item->image;
+                                        if ($zakatImage && !filter_var($zakatImage, FILTER_VALIDATE_URL)) {
+                                            $zakatImage = asset('storage/' . $zakatImage);
+                                        } else {
+                                            $zakatImage = $zakatImage ?: asset('images/nusafac.png');
+                                        }
+                                    @endphp
+                                    <img src="{{ $zakatImage }}" class="w-full h-full object-cover">
+                                </div>
                                 <div class="min-w-0">
-                                    <p class="text-sm font-black text-zinc-900 truncate max-w-[200px]">{{ $zakat->title }}</p>
-                                    <p class="text-[10px] font-bold text-maroon-600 uppercase tracking-widest">{{ $zakat->status }}</p>
+                                    <p class="text-sm font-black text-zinc-900 truncate max-w-[200px]">{{ $item->title }}</p>
+                                    <p class="text-[10px] font-bold text-maroon-600 uppercase tracking-widest">{{ $item->asnaf_category }}</p>
                                 </div>
                             </div>
                         </td>
                         <td class="px-10 py-6">
-                            <div class="space-y-1">
-                                <p class="text-xs font-bold text-zinc-900">{{ $zakat->asnaf_category }}</p>
-                                <p class="text-[10px] text-zinc-400 font-medium">{{ $zakat->institution }}</p>
-                            </div>
+                            <p class="text-xs font-bold text-zinc-900">{{ $item->institution }}</p>
                         </td>
                         <td class="px-10 py-6">
-                            <p class="text-sm font-black text-zinc-900">Rp {{ number_format($zakat->collected_amount, 0, ',', '.') }}</p>
+                            <p class="text-xs font-black text-maroon-700">Rp {{ number_format($item->collected_amount ?? 0, 0, ',', '.') }}</p>
+                        </td>
+                        <td class="px-10 py-6">
+                            <span class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full {{ $item->status == 'active' ? 'bg-green-50 text-green-600' : 'bg-zinc-100 text-zinc-400' }}">
+                                {{ $item->status }}
+                            </span>
                         </td>
                         <td class="px-10 py-6 text-right space-x-2">
-                            <a href="{{ route('admin.zakat.edit', $zakat) }}" class="inline-flex p-2.5 bg-zinc-50 text-zinc-400 hover:text-maroon-700 rounded-xl transition">
+                            <a href="{{ route('admin.zakat.edit', $item) }}" class="inline-flex p-2.5 bg-zinc-50 text-zinc-400 hover:text-maroon-700 rounded-xl transition">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                             </a>
-                            <form action="{{ route('admin.zakat.destroy', $zakat) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus program zakat ini?')">
+                            <form action="{{ route('admin.zakat.destroy', $item) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus program zakat ini?')">
                                 @csrf @method('DELETE')
                                 <button class="p-2.5 bg-zinc-50 text-zinc-400 hover:text-red-600 rounded-xl transition">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -66,11 +87,14 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="px-10 py-20 text-center text-zinc-400 font-medium">Belum ada program zakat.</td>
+                        <td colspan="5" class="px-10 py-20 text-center text-zinc-400 font-medium">Belum ada program zakat.</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        <div class="px-10 py-6 bg-zinc-50/30">
+            {{ $zakats->links() }}
         </div>
     </div>
 </div>
