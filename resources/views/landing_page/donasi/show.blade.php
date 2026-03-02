@@ -56,17 +56,60 @@
 
                     <!-- Tabs & Content -->
                     <div x-data="{ tab: 'cerita' }" class="space-y-8">
-                        <div class="flex border-b border-zinc-200">
-                            <button @click="tab = 'cerita'" :class="tab === 'cerita' ? 'border-maroon-700 text-maroon-700' : 'border-transparent text-zinc-400 hover:text-zinc-600'" class="px-8 py-4 font-bold text-lg border-b-4 transition-all">Cerita</button>
-                            <button @click="tab = 'donatur'" :class="tab === 'donatur' ? 'border-maroon-700 text-maroon-700' : 'border-transparent text-zinc-400 hover:text-zinc-600'" class="px-8 py-4 font-bold text-lg border-b-4 transition-all">Donatur (0)</button>
+                        <div class="flex border-b border-zinc-200 overflow-x-auto">
+                            <button @click="tab = 'cerita'" :class="tab === 'cerita' ? 'border-maroon-700 text-maroon-700' : 'border-transparent text-zinc-400 hover:text-zinc-600'" class="px-8 py-4 font-bold text-sm md:text-lg border-b-4 transition-all whitespace-nowrap">Cerita</button>
+                            <button @click="tab = 'kabar'" :class="tab === 'kabar' ? 'border-maroon-700 text-maroon-700' : 'border-transparent text-zinc-400 hover:text-zinc-600'" class="px-8 py-4 font-bold text-sm md:text-lg border-b-4 transition-all whitespace-nowrap flex items-center gap-2">
+                                Kabar Terbaru
+                                @if($campaign->updates->count() > 0)
+                                    <span class="bg-maroon-100 text-maroon-700 text-[10px] px-2 py-0.5 rounded-full">{{ $campaign->updates->count() }}</span>
+                                @endif
+                            </button>
+                            <button @click="tab = 'donatur'" :class="tab === 'donatur' ? 'border-maroon-700 text-maroon-700' : 'border-transparent text-zinc-400 hover:text-zinc-600'" class="px-8 py-4 font-bold text-sm md:text-lg border-b-4 transition-all whitespace-nowrap">Donatur ({{ $campaign->donations->where('status', 'success')->count() }})</button>
                         </div>
 
+                        <!-- Tab: Cerita -->
                         <div x-show="tab === 'cerita'" class="prose prose-zinc lg:prose-xl max-w-none text-zinc-600 leading-relaxed whitespace-pre-line">
                             {{ $campaign->description }}
                         </div>
 
-                        <div x-show="tab === 'donatur'" class="space-y-4">
+                        <!-- Tab: Kabar Terbaru -->
+                        <div x-show="tab === 'kabar'" class="space-y-10">
+                            @forelse($campaign->updates as $upd)
+                            <div class="relative pl-8 md:pl-12">
+                                <div class="absolute left-0 top-0 bottom-0 w-px bg-zinc-200"></div>
+                                <div class="absolute left-[-4px] top-0 w-2 h-2 rounded-full bg-maroon-700 ring-4 ring-maroon-50"></div>
+                                
+                                <div class="space-y-4">
+                                    <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{{ $upd->created_at->format('d M Y') }}</p>
+                                    <h4 class="text-xl font-black text-zinc-900">{{ $upd->title }}</h4>
+                                    @if($upd->image)
+                                        <div class="rounded-3xl overflow-hidden border border-zinc-100 shadow-sm max-w-lg">
+                                            <img src="{{ asset('storage/' . $upd->image) }}" class="w-full h-auto">
+                                        </div>
+                                    @endif
+                                    <p class="text-zinc-600 leading-relaxed whitespace-pre-line font-medium">{{ $upd->content }}</p>
+                                </div>
+                            </div>
+                            @empty
+                            <div class="py-10 text-center text-zinc-400 font-medium">Belum ada kabar terbaru untuk kampanye ini.</div>
+                            @endforelse
+                        </div>
+
+                        <!-- Tab: Donatur -->
+                        <div x-show="tab === 'donatur'" class="space-y-6">
+                            @forelse($campaign->donations->where('status', 'success') as $don)
+                            <div class="flex items-center gap-4 p-6 bg-white rounded-3xl border border-zinc-100">
+                                <div class="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400 font-black">
+                                    {{ substr($don->is_anonymous ? 'HA' : ($don->donor_name ?? 'NF'), 0, 2) }}
+                                </div>
+                                <div>
+                                    <p class="font-bold text-zinc-900">{{ $don->is_anonymous ? 'Hamba Allah' : ($don->donor_name ?? 'Anonim') }}</p>
+                                    <p class="text-xs text-zinc-400">Berdonasi sebesar <span class="font-black text-maroon-700">Rp {{ number_format($don->amount, 0, ',', '.') }}</span></p>
+                                </div>
+                            </div>
+                            @empty
                             <div class="py-10 text-center text-zinc-400 font-medium">Belum ada donatur untuk saat ini. Jadi yang pertama membantu!</div>
+                            @endforelse
                         </div>
                     </div>
                 </div>

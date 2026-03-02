@@ -35,4 +35,19 @@ class Campaign extends Model
             $campaign->slug = Str::slug($campaign->title) . '-' . Str::random(5);
         });
     }
+
+    public function donations()
+    {
+        return $this->hasMany(Donation::class);
+    }
+
+    public function updates()
+    {
+        return $this->hasMany(CampaignUpdate::class);
+    }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
 }

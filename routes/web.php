@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\CampaignUpdateController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FaqController;
@@ -72,6 +73,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::resource('zakat', ZakatController::class);
     Route::resource('testimoni', TestimonialController::class);
     Route::resource('faq', FaqController::class);
+    Route::resource('updates', CampaignUpdateController::class);
     Route::resource('donatur', \App\Http\Controllers\UserController::class)->parameters(['donatur' => 'donatur']);
     Route::resource('kategori', CategoryController::class)->parameters(['kategori' => 'category']);
     Route::resource('bantuan', SupportController::class)->parameters(['bantuan' => 'dukungan']);
@@ -104,11 +106,15 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
 
 /*
 |--------------------------------------------------------------------------
-| User Profile Routes
+| User Profile & Dashboard Routes
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
+    // User Dashboard
+    Route::get('/dashboard', [\App\Http\Controllers\UserDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/donasi/{donation}/sertifikat', [\App\Http\Controllers\UserDashboardController::class, 'certificate'])->name('donation.certificate');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

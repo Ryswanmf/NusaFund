@@ -51,14 +51,57 @@
                     <a href="{{ route('zakat.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('zakat*') ? 'text-amber-400' : '' }}">Zakat</a>
                     <a href="{{ route('fundraising.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('galang-dana*') ? 'text-amber-400' : '' }}">Galang Dana</a>
                     <a href="{{ route('about') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('tentang-kami') ? 'text-amber-400' : '' }}">Tentang Kami</a>
+                    
                     @auth
-                        <div class="flex items-center gap-3">
-                            <form method="POST" action="{{ route('logout') }}" class="inline">
-                                @csrf
-                                <button type="submit" class="text-white hover:text-amber-400 transition px-3 py-2 text-sm font-bold border border-white/20 rounded-full hover:border-amber-400">
-                                    Keluar
-                                </button>
-                            </form>
+                        <!-- User Dropdown -->
+                        <div class="relative" x-data="{ open: false }" @click.away="open = false">
+                            <button @click="open = !open" class="flex items-center transition-all duration-300 active:scale-95 group">
+                                <div class="w-10 h-10 rounded-full bg-amber-500 border-4 border-maroon-700/50 group-hover:border-amber-400 flex items-center justify-center text-maroon-950 font-black text-xs transition-all duration-300 shadow-lg overflow-hidden">
+                                    @if(Auth::user()->avatar)
+                                        <img src="{{ asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover">
+                                    @else
+                                        {{ substr(Auth::user()->name, 0, 2) }}
+                                    @endif
+                                </div>
+                            </button>
+
+                            <!-- Dropdown Menu -->
+                            <div x-show="open" 
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                 x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+                                 class="absolute right-0 mt-3 w-64 bg-white rounded-[2rem] shadow-2xl border border-zinc-100 py-4 z-50 overflow-hidden" 
+                                 x-cloak>
+                                
+                                <div class="px-6 py-4 border-b border-zinc-50 mb-2">
+                                    <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Akun Donatur</p>
+                                    <p class="text-sm font-black text-zinc-900 truncate">{{ Auth::user()->name }}</p>
+                                </div>
+
+                                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-6 py-3 text-sm font-bold text-zinc-600 hover:bg-maroon-50 hover:text-maroon-700 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                                    Dashboard Saya
+                                </a>
+                                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-6 py-3 text-sm font-bold text-zinc-600 hover:bg-maroon-50 hover:text-maroon-700 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                                    Sertifikat Digital
+                                </a>
+                                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-6 py-3 text-sm font-bold text-zinc-600 hover:bg-maroon-50 hover:text-maroon-700 transition border-b border-zinc-50">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                    Pengaturan Profil
+                                </a>
+
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="w-full flex items-center gap-3 px-6 py-4 text-sm font-black text-red-600 hover:bg-red-50 transition">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                        Keluar Akun
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     @else
                         <div class="flex items-center gap-3">
