@@ -36,9 +36,12 @@ Route::controller(EventController::class)->group(function () {
 Route::get('/zakat', [ZakatController::class, 'publicIndex'])->name('zakat.index');
 
 // Galang Dana
-Route::controller(FundraisingController::class)->group(function () {
-    Route::get('/galang-dana', 'publicIndex')->name('fundraising.index');
-    Route::get('/galang-dana/panduan', 'publicGuide')->name('fundraising.guide');
+Route::controller(FundraisingController::class)->prefix('galang-dana')->name('fundraising.')->group(function () {
+    Route::get('/', 'publicIndex')->name('index');
+    Route::get('/panduan', 'publicGuide')->name('guide');
+    Route::get('/buat', 'publicCreate')->name('create');
+    Route::post('/buat', 'publicStore')->name('store');
+    Route::get('/{slug}', 'publicShow')->name('show');
 });
 
 // Bantuan & Tentang Kami
