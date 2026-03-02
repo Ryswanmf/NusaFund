@@ -20,7 +20,7 @@ class AdminMiddleware
             return $next($request);
         }
 
-        // Jika bukan admin, arahkan kembali ke beranda atau kirim error 403
-        abort(403, 'Akses ditolak. Halaman ini hanya untuk Administrator.');
+        // Jika bukan admin, arahkan kembali ke beranda
+        return redirect()->route('home');
     }
 }
