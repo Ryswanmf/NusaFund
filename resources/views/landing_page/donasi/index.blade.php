@@ -37,11 +37,15 @@
                 @forelse($campaigns as $camp)
                 <div class="bg-white rounded-[2.5rem] overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col h-full group">
                     <div class="relative overflow-hidden aspect-[16/10]">
-                        @if($camp->image)
-                            <img src="{{ asset('storage/' . $camp->image) }}" alt="{{ $camp->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
-                        @else
-                            <div class="w-full h-full bg-zinc-100 flex items-center justify-center text-zinc-400 font-bold">NusaFund</div>
-                        @endif
+                        @php
+                            $campImage = $camp->image;
+                            if ($campImage && !filter_var($campImage, FILTER_VALIDATE_URL)) {
+                                $campImage = asset('storage/' . $campImage);
+                            } else {
+                                $campImage = $campImage ?: asset('images/nusafac.png');
+                            }
+                        @endphp
+                        <img src="{{ $campImage }}" alt="{{ $camp->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
                         <div class="absolute top-5 left-5">
                             <span class="bg-maroon-600/90 backdrop-blur-md text-white text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">{{ $camp->category }}</span>
                         </div>

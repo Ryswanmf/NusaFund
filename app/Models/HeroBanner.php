@@ -6,5 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class HeroBanner extends Model
 {
-    //
+    protected $fillable = [
+        'tag',
+        'title',
+        'description',
+        'image',
+        'cta_text',
+        'cta_link',
+        'order',
+        'is_active'
+    ];
 }

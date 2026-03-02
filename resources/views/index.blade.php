@@ -43,7 +43,13 @@
                     <!-- Image Content -->
                     <div class="order-1 lg:order-2 relative group px-4 lg:px-0">
                         <div class="relative z-10 rounded-[3rem] lg:rounded-[4rem] overflow-hidden shadow-[0_35px_60px_-15px_rgba(0,0,0,0.5)] border-8 lg:border-[12px] border-white/10 aspect-[4/3] transform transition duration-1000 rotate-2">
-                            <img src="{{ filter_var($hero->image, FILTER_VALIDATE_URL) ? $hero->image : asset('storage/' . $hero->image) }}" alt="{{ $hero->tag }}" class="w-full h-full object-cover">
+                            @php
+                                $heroImage = $hero->image;
+                                if (!filter_var($heroImage, FILTER_VALIDATE_URL)) {
+                                    $heroImage = $heroImage ? asset('storage/' . $heroImage) : asset('images/nusafac.png');
+                                }
+                            @endphp
+                            <img src="{{ $heroImage }}" alt="{{ $hero->tag }}" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-gradient-to-t from-maroon-900/40 via-transparent to-transparent"></div>
                         </div>
                         <!-- Floating Card -->

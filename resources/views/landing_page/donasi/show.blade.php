@@ -23,11 +23,15 @@
                     <!-- Hero Image & Title -->
                     <div class="space-y-6">
                         <div class="relative rounded-[2.5rem] overflow-hidden shadow-2xl aspect-video">
-                            @if($campaign->image)
-                                <img src="{{ asset('storage/' . $campaign->image) }}" alt="{{ $campaign->title }}" class="w-full h-full object-cover">
-                            @else
-                                <div class="w-full h-full bg-zinc-200 flex items-center justify-center font-bold text-zinc-400">NusaFund</div>
-                            @endif
+                            @php
+                                $campImage = $campaign->image;
+                                if ($campImage && !filter_var($campImage, FILTER_VALIDATE_URL)) {
+                                    $campImage = asset('storage/' . $campImage);
+                                } else {
+                                    $campImage = $campImage ?: asset('images/nusafac.png');
+                                }
+                            @endphp
+                            <img src="{{ $campImage }}" alt="{{ $campaign->title }}" class="w-full h-full object-cover">
                             <div class="absolute top-6 left-6 flex gap-3">
                                 @if($campaign->is_urgent)
                                     <span class="bg-maroon-600/90 backdrop-blur-md text-white text-xs font-bold px-5 py-2 rounded-full uppercase tracking-widest shadow-lg">Mendesak</span>

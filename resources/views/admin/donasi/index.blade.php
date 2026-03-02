@@ -37,11 +37,15 @@
                         <td class="px-10 py-6">
                             <div class="flex items-center gap-4">
                                 <div class="w-16 h-12 rounded-2xl bg-zinc-100 overflow-hidden flex-shrink-0 border border-zinc-200">
-                                    @if($campaign->image)
-                                        <img src="{{ asset('storage/' . $campaign->image) }}" class="w-full h-full object-cover">
-                                    @else
-                                        <div class="w-full h-full flex items-center justify-center text-[10px] font-bold text-zinc-400">NO IMG</div>
-                                    @endif
+                                    @php
+                                        $campImage = $campaign->image;
+                                        if ($campImage && !filter_var($campImage, FILTER_VALIDATE_URL)) {
+                                            $campImage = asset('storage/' . $campImage);
+                                        } else {
+                                            $campImage = $campImage ?: asset('images/nusafac.png');
+                                        }
+                                    @endphp
+                                    <img src="{{ $campImage }}" class="w-full h-full object-cover">
                                 </div>
                                 <div class="min-w-0">
                                     <p class="text-sm font-black text-zinc-900 truncate max-w-[200px]">{{ $campaign->title }}</p>
