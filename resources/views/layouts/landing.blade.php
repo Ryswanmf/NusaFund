@@ -30,14 +30,16 @@
                     
                     <!-- Search Bar (Hidden on mobile) -->
                     <div class="hidden md:block flex-1 max-w-md">
-                        <div class="relative">
+                        <form action="{{ route('donasi.index') }}" method="GET" class="relative">
                             <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-maroon-300">
                                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             </span>
                             <input type="text" 
+                                   name="search"
+                                   value="{{ request('search') }}"
                                    class="block w-full bg-maroon-900/50 border border-maroon-700/50 rounded-full py-2 pl-10 pr-3 text-sm placeholder-maroon-300 text-white focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition" 
                                    placeholder="Cari campaign kebaikan...">
-                        </div>
+                        </form>
                     </div>
                 </div>
 
