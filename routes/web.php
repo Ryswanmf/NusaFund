@@ -35,6 +35,9 @@ Route::controller(EventController::class)->group(function () {
 // Zakat
 Route::get('/zakat', [ZakatController::class, 'publicIndex'])->name('zakat.index');
 
+// FAQ
+Route::get('/faq', [FaqController::class, 'publicIndex'])->name('faq.index');
+
 // Galang Dana
 Route::controller(FundraisingController::class)->prefix('galang-dana')->name('fundraising.')->group(function () {
     Route::get('/', 'publicIndex')->name('index');
@@ -67,6 +70,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::resource('event', EventController::class);
     Route::resource('zakat', ZakatController::class);
     Route::resource('testimoni', TestimonialController::class);
+    Route::resource('faq', FaqController::class);
     Route::resource('donatur', \App\Http\Controllers\UserController::class)->parameters(['donatur' => 'donatur']);
     Route::resource('kategori', CategoryController::class)->parameters(['kategori' => 'category']);
     Route::resource('bantuan', SupportController::class)->parameters(['bantuan' => 'dukungan']);

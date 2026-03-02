@@ -108,23 +108,24 @@
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                @php
-                    $categories = [
-                        ['name' => 'Pendidikan', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
-                        ['name' => 'Kesehatan', 'icon' => 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'],
-                        ['name' => 'Panti Asuhan', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
-                        ['name' => 'Bencana', 'icon' => 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                        ['name' => 'Kemanusiaan', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'],
-                        ['name' => 'Zakat', 'icon' => 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-7.714 2.143L11 21l-2.286-6.857L1 12l7.714-2.143L11 3z'],
-                    ];
-                @endphp
-
                 @foreach($categories as $cat)
-                <a href="#" class="bg-white p-8 rounded-[2rem] shadow-sm border border-zinc-100 flex flex-col items-center text-center hover:shadow-xl hover:border-maroon-200 transition-all duration-300 group hover:-translate-y-2">
+                <a href="{{ route('donasi.index', ['category' => $cat->name]) }}" class="bg-white p-8 rounded-[2rem] shadow-sm border border-zinc-100 flex flex-col items-center text-center hover:shadow-xl hover:border-maroon-200 transition-all duration-300 group hover:-translate-y-2">
                     <div class="w-16 h-16 bg-maroon-50 text-maroon-700 rounded-2xl flex items-center justify-center text-maroon-600 mb-5 group-hover:bg-maroon-600 group-hover:text-white transition-colors duration-300">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $cat['icon'] }}"></path></svg>
+                        @if($cat->icon_svg)
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                @if(str_contains($cat->icon_svg, '<path') || str_contains($cat->icon_svg, '<svg'))
+                                    {!! $cat->icon_svg !!}
+                                @else
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="{!! $cat->icon_svg !!}"></path>
+                                @endif
+                            </svg>
+                        @else
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        @endif
                     </div>
-                    <span class="font-bold text-zinc-800">{{ $cat['name'] }}</span>
+                    <span class="font-bold text-zinc-800">{{ $cat->name }}</span>
                 </a>
                 @endforeach
             </div>
@@ -267,7 +268,11 @@
 
                 <div class="relative">
                     <div class="rounded-[3rem] overflow-hidden shadow-2xl border-[12px] border-zinc-50 transform -rotate-3 hover:rotate-0 transition duration-700">
-                        <img src="https://images.unsplash.com/photo-1509059852496-f3822ae057bf?q=80&w=1481&auto=format&fit=crop" alt="Impact Image" class="w-full h-auto aspect-[4/5] object-cover">
+                        @php
+                            $setting = \App\Models\Setting::first();
+                            $impactImage = ($setting && $setting->impact_image) ? asset('storage/' . $setting->impact_image) : 'https://images.unsplash.com/photo-1509059852496-f3822ae057bf?q=80&w=1481&auto=format&fit=crop';
+                        @endphp
+                        <img src="{{ $impactImage }}" alt="Impact Image" class="w-full h-auto aspect-[4/5] object-cover">
                     </div>
                     <div class="absolute -top-10 -right-10 bg-amber-500 p-8 rounded-3xl shadow-2xl text-maroon-950 max-w-[220px] animate-pulse-slow">
                         <p class="text-5xl font-black mb-2">100%</p>

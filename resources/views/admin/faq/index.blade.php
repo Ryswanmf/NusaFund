@@ -4,12 +4,12 @@
 <div class="space-y-10">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-            <h1 class="text-3xl font-black text-zinc-900 tracking-tight">Kelola <span class="text-maroon-700">Testimoni</span></h1>
-            <p class="text-zinc-500 mt-2 font-medium">Daftar suara kebaikan dari para donatur dan penerima manfaat.</p>
+            <h1 class="text-3xl font-black text-zinc-900 tracking-tight">Kelola <span class="text-maroon-700">FAQ</span></h1>
+            <p class="text-zinc-500 mt-2 font-medium">Atur pertanyaan yang sering diajukan oleh pengguna.</p>
         </div>
-        <a href="{{ route('admin.testimoni.create') }}" class="bg-maroon-800 text-white px-8 py-4 rounded-3xl font-black text-sm hover:bg-maroon-700 transition shadow-xl shadow-maroon-900/20 flex items-center gap-2">
+        <a href="{{ route('admin.faq.create') }}" class="bg-maroon-800 text-white px-8 py-4 rounded-3xl font-black text-sm hover:bg-maroon-700 transition shadow-xl shadow-maroon-900/20 flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
-            Tambah Testimoni
+            Tambah FAQ
         </a>
     </div>
 
@@ -24,32 +24,21 @@
             <table class="min-w-full divide-y divide-zinc-50">
                 <thead class="bg-zinc-50/50">
                     <tr>
-                        <th class="px-10 py-6 text-left text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Pemberi Testimoni</th>
-                        <th class="px-10 py-6 text-left text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Pesan</th>
+                        <th class="px-10 py-6 text-left text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Urutan</th>
+                        <th class="px-10 py-6 text-left text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Pertanyaan</th>
                         <th class="px-10 py-6 text-left text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Status</th>
                         <th class="px-10 py-6 text-right text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-zinc-50">
-                    @forelse($testimonials as $item)
+                    @forelse($faqs as $item)
                     <tr class="hover:bg-zinc-50/50 transition">
                         <td class="px-10 py-6">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-2xl bg-maroon-50 overflow-hidden flex-shrink-0 border border-zinc-100 shadow-inner flex items-center justify-center text-maroon-600 font-bold uppercase">
-                                    @if($item->avatar)
-                                        <img src="{{ asset('storage/' . $item->avatar) }}" class="w-full h-full object-cover">
-                                    @else
-                                        {{ substr($item->name, 0, 2) }}
-                                    @endif
-                                </div>
-                                <div class="min-w-0">
-                                    <p class="text-sm font-black text-zinc-900 truncate max-w-[150px]">{{ $item->name }}</p>
-                                    <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{{ $item->role }}</p>
-                                </div>
-                            </div>
+                            <span class="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-xs font-black text-zinc-500">{{ $item->order }}</span>
                         </td>
                         <td class="px-10 py-6">
-                            <p class="text-xs font-medium text-zinc-500 italic line-clamp-2 italic">"{{ $item->message }}"</p>
+                            <p class="text-sm font-black text-zinc-900">{{ $item->question }}</p>
+                            <p class="text-[10px] text-zinc-400 mt-1 line-clamp-1">{{ $item->answer }}</p>
                         </td>
                         <td class="px-10 py-6">
                             <span class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full {{ $item->is_published ? 'bg-green-50 text-green-600' : 'bg-zinc-100 text-zinc-400' }}">
@@ -57,10 +46,10 @@
                             </span>
                         </td>
                         <td class="px-10 py-6 text-right space-x-2">
-                            <a href="{{ route('admin.testimoni.edit', $item) }}" class="inline-flex p-2.5 bg-zinc-50 text-zinc-400 hover:text-maroon-700 rounded-xl transition">
+                            <a href="{{ route('admin.faq.edit', $item) }}" class="inline-flex p-2.5 bg-zinc-50 text-zinc-400 hover:text-maroon-700 rounded-xl transition">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                             </a>
-                            <form action="{{ route('admin.testimoni.destroy', $item) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus testimoni ini?')">
+                            <form action="{{ route('admin.faq.destroy', $item) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus FAQ ini?')">
                                 @csrf @method('DELETE')
                                 <button class="p-2.5 bg-zinc-50 text-zinc-400 hover:text-red-600 rounded-xl transition">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -70,14 +59,14 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="px-10 py-20 text-center text-zinc-400 font-medium">Belum ada testimoni.</td>
+                        <td colspan="4" class="px-10 py-20 text-center text-zinc-400 font-medium">Belum ada FAQ.</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
         <div class="px-10 py-6 bg-zinc-50/30">
-            {{ $testimonials->links() }}
+            {{ $faqs->links() }}
         </div>
     </div>
 </div>

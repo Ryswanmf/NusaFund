@@ -8,9 +8,13 @@ use Illuminate\Support\Facades\Storage;
 
 class TestimonialController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $testimonials = Testimonial::latest()->paginate(10);
+        $query = Testimonial::latest();
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+        $testimonials = $query->paginate(10);
         return view('admin.testimoni.index', compact('testimonials'));
     }
 
@@ -24,13 +28,15 @@ class TestimonialController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'role' => 'required|string|max:255',
-            'message' => 'required',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:1024'
+            'message' => 'required|string',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:1024'
         ]);
 
         $data = $request->all();
+        $data['is_published'] = $request->has('is_published');
+
         if ($request->hasFile('avatar')) {
-            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            $data['avatar'] = $request->file('avatar')->store('testimonials', 'public');
         }
 
         Testimonial::create($data);
@@ -48,13 +54,18 @@ class TestimonialController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'role' => 'required|string|max:255',
-            'message' => 'required',
+            'message' => 'required|string',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:1024'
         ]);
 
         $data = $request->all();
+        $data['is_published'] = $request->has('is_published');
+
         if ($request->hasFile('avatar')) {
-            if ($testimoni->avatar) Storage::disk('public')->delete($testimoni->avatar);
-            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            if ($testimoni->avatar && Storage::disk('public')->exists($testimoni->avatar)) {
+                Storage::disk('public')->delete($testimoni->avatar);
+            }
+            $data['avatar'] = $request->file('avatar')->store('testimonials', 'public');
         }
 
         $testimoni->update($data);
@@ -64,8 +75,11 @@ class TestimonialController extends Controller
 
     public function destroy(Testimonial $testimoni)
     {
-        if ($testimoni->avatar) Storage::disk('public')->delete($testimoni->avatar);
+        if ($testimoni->avatar && Storage::disk('public')->exists($testimoni->avatar)) {
+            Storage::disk('public')->delete($testimoni->avatar);
+        }
         $testimoni->delete();
-        return redirect()->route('admin.testimoni.index')->with('success', 'Testimoni dihapus!');
+
+        return redirect()->route('admin.testimoni.index')->with('success', 'Testimoni berhasil dihapus!');
     }
 }

@@ -4,13 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Testimonial extends Model
+class Faq extends Model
 {
     protected $fillable = [
-        'name',
-        'role',
-        'message',
-        'avatar',
+        'question',
+        'answer',
+        'order',
         'is_published'
     ];
 
