@@ -93,8 +93,7 @@ class DonationController extends Controller
 
     public function success(Donation $donation)
     {
-        // Jika status masih pending, kita coba "paksa" menjadi success (Hanya untuk testing/convenience)
-        // Di sistem nyata, ini biasanya dilakukan otomatis oleh Midtrans Callback
+        // Jika status masih pending, kita coba "paksa" menjadi success (Hanya untuk testing di localhost)
         if ($donation->status === 'pending') {
             $donation->update(['status' => 'success']);
             
