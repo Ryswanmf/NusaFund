@@ -14,6 +14,8 @@ class Campaign extends Model
         'title',
         'slug',
         'description',
+        'meta_description',
+        'meta_keywords',
         'category',
         'target_amount',
         'collected_amount',

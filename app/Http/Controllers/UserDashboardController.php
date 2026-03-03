@@ -29,7 +29,30 @@ class UserDashboardController extends Controller
             ->distinct('campaign_id')
             ->count();
 
-        return view('landing_page.user.dashboard', compact('donations', 'totalDonation', 'campaignCount'));
+        // Data untuk Grafik Tren Donasi (6 bulan terakhir)
+        $monthlyStats = Donation::where('user_id', $user->id)
+            ->where('status', 'success')
+            ->selectRaw('SUM(amount) as total, DATE_FORMAT(created_at, "%b") as month')
+            ->groupBy('month')
+            ->orderBy('created_at')
+            ->take(6)
+            ->get();
+
+        // Data untuk Grafik Sebaran Kategori
+        $categoryStats = Donation::where('user_id', $user->id)
+            ->where('status', 'success')
+            ->join('campaigns', 'donations.campaign_id', '=', 'campaigns.id')
+            ->selectRaw('COUNT(*) as count, campaigns.category')
+            ->groupBy('campaigns.category')
+            ->get();
+
+        return view('landing_page.user.dashboard', compact(
+            'donations', 
+            'totalDonation', 
+            'campaignCount', 
+            'monthlyStats', 
+            'categoryStats'
+        ));
     }
 
     public function certificate($transaction_id)

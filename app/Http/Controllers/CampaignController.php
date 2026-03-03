@@ -32,6 +32,8 @@ class CampaignController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
+            'meta_description' => 'nullable|string|max:160',
+            'meta_keywords' => 'nullable|string|max:255',
             'category' => 'required',
             'target_amount' => 'required|numeric|min:1000',
             'end_date' => 'required|date|after:today',
@@ -65,11 +67,13 @@ class CampaignController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
+            'meta_description' => 'nullable|string|max:160',
+            'meta_keywords' => 'nullable|string|max:255',
             'category' => 'required',
             'target_amount' => 'required|numeric|min:1000',
             'end_date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'status' => 'required|in:active,inactive,completed'
+            'status' => 'required|in:active,inactive,completed,suspended'
         ]);
 
         $data = $request->all();

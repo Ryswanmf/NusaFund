@@ -3,13 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'NusaFund - Kebaikan untuk Semua')</title>
+    <title>@yield('title', isset($meta) ? $meta['title'] : 'NusaFund - Kebaikan untuk Semua')</title>
     
     <!-- SEO & Social Sharing Meta Tags -->
-    <meta name="description" content="@yield('meta_description', 'Platform penggalangan dana paling transparan dan terpercaya di Indonesia.')">
-    <meta property="og:title" content="@yield('title', 'NusaFund - Kebaikan untuk Semua')">
-    <meta property="og:description" content="@yield('meta_description', 'Bantu sesama melalui berbagai program kemanusiaan di NusaFund.')">
-    <meta property="og:image" content="@yield('meta_image', asset('images/nusafac.png'))">
+    <meta name="description" content="{{ isset($meta) ? $meta['description'] : 'Platform penggalangan dana paling transparan dan terpercaya di Indonesia.' }}">
+    <meta name="keywords" content="{{ isset($campaign->meta_keywords) ? $campaign->meta_keywords : 'donasi, zakat, infaq, sedekah, kemanusiaan' }}">
+    
+    <meta property="og:title" content="{{ isset($meta) ? $meta['title'] : 'NusaFund - Kebaikan untuk Semua' }}">
+    <meta property="og:description" content="{{ isset($meta) ? $meta['description'] : 'Bantu sesama melalui berbagai program kemanusiaan di NusaFund.' }}">
+    <meta property="og:image" content="{{ isset($meta) ? $meta['image'] : asset('images/nusafac.png') }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">

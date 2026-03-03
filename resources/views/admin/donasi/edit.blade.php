@@ -64,6 +64,26 @@
                 @error('description') <p class="text-red-600 text-[10px] font-black mt-1 pl-2">{{ $message }}</p> @enderror
             </div>
 
+            <!-- SEO Section -->
+            <div class="space-y-8 pt-8 border-t border-zinc-50">
+                <h3 class="text-lg font-black text-zinc-900 flex items-center gap-3">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    SEO Dashboard (Optimasi Google)
+                </h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-zinc-400 uppercase tracking-widest pl-2">Meta Description (Max 160 Karakter)</label>
+                        <textarea name="meta_description" rows="3" class="w-full bg-zinc-50 border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-blue-500 font-medium text-zinc-600 leading-relaxed">{{ old('meta_description', $campaign->meta_description) }}</textarea>
+                        <p class="text-[9px] text-zinc-400 pl-2 italic">Ringkasan yang akan tampil saat dibagikan ke WhatsApp atau hasil pencarian Google.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-zinc-400 uppercase tracking-widest pl-2">Keywords (Pisahkan dengan koma)</label>
+                        <input type="text" name="meta_keywords" value="{{ old('meta_keywords', $campaign->meta_keywords) }}" class="w-full bg-zinc-50 border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-blue-500 font-bold text-zinc-900" placeholder="Contoh: donasi, bantuan medis, yatim piatu">
+                        <p class="text-[9px] text-zinc-400 pl-2 italic">Kata kunci agar kampanye mudah ditemukan di mesin pencari.</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="space-y-2">
                     <label class="text-[10px] font-black text-zinc-400 uppercase tracking-widest pl-2">Target Dana (Rp)</label>
