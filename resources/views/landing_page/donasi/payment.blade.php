@@ -149,10 +149,10 @@
                 if (data.snap_token) {
                     window.snap.pay(data.snap_token, {
                         onSuccess: function (result) {
-                            window.location.href = '{{ route('dashboard') }}';
+                            window.location.href = '/donasi/berhasil/' + data.transaction_id;
                         },
                         onPending: function (result) {
-                            window.location.href = '{{ route('dashboard') }}';
+                            window.location.href = '/donasi/berhasil/' + data.transaction_id;
                         },
                         onError: function (result) {
                             alert('Pembayaran gagal!');

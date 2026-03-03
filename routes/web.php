@@ -4,13 +4,16 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CampaignUpdateController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HeroBannerController;
 use App\Http\Controllers\FundraisingController;
+use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\ZakatController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,11 +32,13 @@ Route::controller(CampaignController::class)->group(function () {
 });
 
 // Transaksi Donasi
-Route::get('/donasi/{campaign:slug}/bayar', [\App\Http\Controllers\DonationController::class, 'create'])->name('donasi.pay');
-Route::post('/donasi/{campaign:slug}/bayar', [\App\Http\Controllers\DonationController::class, 'store'])->name('donasi.submit');
+Route::get('/donasi/{campaign:slug}/bayar', [DonationController::class, 'create'])->name('donasi.pay');
+Route::post('/donasi/{campaign:slug}/bayar', [DonationController::class, 'store'])->name('donasi.submit');
+Route::get('/donasi/berhasil/{donation:transaction_id}', [DonationController::class, 'success'])->name('donasi.success');
+Route::get('/donasi/sertifikat/{transaction_id}', [UserDashboardController::class, 'certificate'])->name('donation.certificate');
 
 // Midtrans Callback
-Route::post('/midtrans/callback', [\App\Http\Controllers\MidtransController::class, 'callback'])->name('midtrans.callback');
+Route::post('/midtrans/callback', [MidtransController::class, 'callback'])->name('midtrans.callback');
 
 // Event
 Route::controller(EventController::class)->group(function () {
@@ -48,7 +53,7 @@ Route::get('/zakat', [ZakatController::class, 'publicIndex'])->name('zakat.index
 Route::get('/faq', [FaqController::class, 'publicIndex'])->name('faq.index');
 
 // ChatBot
-Route::post('/chatbot/message', [\App\Http\Controllers\ChatBotController::class, 'message'])->name('chatbot.message');
+Route::post('/chatbot/message', [ChatBotController::class, 'message'])->name('chatbot.message');
 
 // Galang Dana
 Route::controller(FundraisingController::class)->prefix('galang-dana')->name('fundraising.')->group(function () {
@@ -84,6 +89,12 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::resource('testimoni', TestimonialController::class);
     Route::resource('faq', FaqController::class);
     Route::resource('updates', CampaignUpdateController::class);
+    
+    // Transaksi Donasi
+    Route::get('/transaksi', [\App\Http\Controllers\Admin\DonationTransactionController::class, 'index'])->name('transactions.index');
+    Route::post('/transaksi/{donation}/confirm', [\App\Http\Controllers\Admin\DonationTransactionController::class, 'confirm'])->name('transactions.confirm');
+    Route::delete('/transaksi/{donation}', [\App\Http\Controllers\Admin\DonationTransactionController::class, 'destroy'])->name('transactions.destroy');
+
     Route::resource('donatur', \App\Http\Controllers\UserController::class)->parameters(['donatur' => 'donatur']);
     Route::resource('kategori', CategoryController::class)->parameters(['kategori' => 'category']);
     Route::resource('bantuan', SupportController::class)->parameters(['bantuan' => 'dukungan']);
@@ -122,8 +133,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // User Dashboard
-    Route::get('/dashboard', [\App\Http\Controllers\UserDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/donasi/{donation}/sertifikat', [\App\Http\Controllers\UserDashboardController::class, 'certificate'])->name('donation.certificate');
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -91,7 +91,7 @@
                                 </td>
                                 <td class="px-10 py-6 text-right">
                                     @if($item->status == 'success')
-                                        <a href="{{ route('donation.certificate', $item) }}" target="_blank" class="inline-flex items-center gap-2 text-maroon-700 font-black text-[10px] uppercase tracking-widest hover:text-maroon-900 transition">
+                                        <a href="{{ route('donation.certificate', $item->transaction_id) }}" target="_blank" class="inline-flex items-center gap-2 text-maroon-700 font-black text-[10px] uppercase tracking-widest hover:text-maroon-900 transition">
                                             Unduh Sertifikat
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                                         </a>

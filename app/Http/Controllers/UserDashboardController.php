@@ -32,13 +32,17 @@ class UserDashboardController extends Controller
         return view('landing_page.user.dashboard', compact('donations', 'totalDonation', 'campaignCount'));
     }
 
-    public function certificate(Donation $donation)
+    public function certificate($transaction_id)
     {
-        // Pastikan donasi milik user yang sedang login dan sudah sukses
-        if ($donation->user_id !== Auth::id() || $donation->status !== 'success') {
-            abort(403, 'Sertifikat tidak tersedia.');
-        }
+        $donation = Donation::with(['campaign', 'user'])
+            ->where('transaction_id', $transaction_id)
+            ->where('status', 'success')
+            ->firstOrFail();
 
-        return view('landing_page.user.certificate', compact('donation'));
+        // Tentukan nama donatur (User terdaftar atau Nama Tamu)
+        $donorName = $donation->user ? $donation->user->name : $donation->donor_name;
+        if ($donation->is_anonymous) $donorName = "Hamba Allah";
+
+        return view('landing_page.user.certificate', compact('donation', 'donorName'));
     }
 }

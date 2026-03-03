@@ -78,10 +78,28 @@ class DonationController extends Controller
             $snapToken = Snap::getSnapToken($params);
             return response()->json([
                 'snap_token' => $snapToken,
-                'donation_id' => $donation->id
+                'donation_id' => $donation->id,
+                'transaction_id' => $transactionId
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    public function success(Donation $donation)
+    {
+        // Izinkan success atau pending agar tidak langsung dilempar ke dashboard
+        if (!in_array($donation->status, ['success', 'pending'])) {
+            return redirect()->route('dashboard');
+        }
+
+        // Ambil 3 rekomendasi campaign lain secara acak
+        $recommendations = Campaign::where('status', 'active')
+            ->where('id', '!=', $donation->campaign_id)
+            ->inRandomOrder()
+            ->take(3)
+            ->get();
+
+        return view('landing_page.donasi.success', compact('donation', 'recommendations'));
     }
 }
