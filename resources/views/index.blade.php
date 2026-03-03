@@ -171,19 +171,27 @@
                                 </div>
                                 <div class="w-full bg-zinc-100 h-3 rounded-full overflow-hidden">
                                     @php $percent = ($camp->collected_amount / $camp->target_amount) * 100; @endphp
-                                    <div class="bg-maroon-600 h-full rounded-full transition-all duration-1000" style="width: {{ min($percent, 100) }}%"></div>
+                                    <div class="{{ ($percent >= 100 || $camp->status === 'completed') ? 'bg-green-500' : 'bg-maroon-600' }} h-full rounded-full transition-all duration-1000" style="width: {{ min($percent, 100) }}%"></div>
                                 </div>
                             </div>
                             <div class="flex justify-between items-center text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                <span class="text-maroon-600">{{ round($percent) }}% Tercapai</span>
+                                <span class="{{ ($percent >= 100 || $camp->status === 'completed') ? 'text-green-600' : 'text-maroon-600' }}">
+                                    {{ round($percent) }}% {{ ($percent >= 100 || $camp->status === 'completed') ? 'Tercapai' : 'Tercapai' }}
+                                </span>
                                 <span class="flex items-center gap-1.5 bg-zinc-50 px-3 py-1 rounded-full">
-                                    <svg class="w-3 h-3 text-maroon-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    {{ ceil(now()->diffInDays($camp->end_date)) }} Hari Lagi
+                                    <svg class="w-3 h-3 text-amber-500" fill="currentColor" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                    {{ $camp->donations_count ?? 0 }} Donatur
                                 </span>
                             </div>
-                            <a href="{{ route('donasi.show', $camp->slug) }}" class="block w-full text-center mt-4 bg-maroon-50 text-maroon-700 hover:bg-maroon-700 hover:text-white py-4 rounded-2xl font-black transition-all duration-300 transform active:scale-95">
-                                Donasi Sekarang
-                            </a>
+                            @if($percent >= 100 || $camp->status === 'completed')
+                                <div class="block w-full text-center mt-4 bg-zinc-100 text-zinc-400 py-4 rounded-2xl font-black cursor-not-allowed uppercase tracking-widest text-xs">
+                                    {{ $camp->status === 'completed' ? 'Kampanye Selesai' : 'Target Tercapai' }}
+                                </div>
+                            @else
+                                <a href="{{ route('donasi.show', $camp->slug) }}" class="block w-full text-center mt-4 bg-maroon-50 text-maroon-700 hover:bg-maroon-700 hover:text-white py-4 rounded-2xl font-black transition-all duration-300 transform active:scale-95">
+                                    Donasi Sekarang
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>

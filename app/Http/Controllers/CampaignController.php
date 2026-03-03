@@ -109,7 +109,10 @@ class CampaignController extends Controller
         $testimonials = \App\Models\Testimonial::where('is_published', true)->latest()->take(2)->get();
 
         // Ambil kampanye: Prioritas Mendesak (is_urgent) lalu Terbaru (latest)
-        $urgentCampaigns = Campaign::where('status', 'active')
+        $urgentCampaigns = Campaign::whereIn('status', ['active', 'completed'])
+            ->withCount(['donations' => function ($query) {
+                $query->where('status', 'success');
+            }])
             ->orderBy('is_urgent', 'desc')
             ->latest()
             ->take(3)
@@ -122,7 +125,10 @@ class CampaignController extends Controller
     public function publicIndex(Request $request)
     {
         // Prioritas: Mendesak (is_urgent) lalu Terbaru (latest)
-        $query = Campaign::where('status', 'active')
+        $query = Campaign::whereIn('status', ['active', 'completed'])
+            ->withCount(['donations' => function ($query) {
+                $query->where('status', 'success');
+            }])
             ->orderBy('is_urgent', 'desc')
             ->latest();
 

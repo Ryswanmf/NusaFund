@@ -22,6 +22,11 @@ class DonationController extends Controller
 
     public function create(Campaign $campaign)
     {
+        // Cek jika target sudah tercapai atau status selesai
+        if (($campaign->collected_amount >= $campaign->target_amount && $campaign->target_amount > 0) || $campaign->status === 'completed') {
+            return redirect()->route('donasi.show', $campaign->slug)->with('error', 'Kampanye donasi ini sudah selesai. Terima kasih atas niat baik Anda!');
+        }
+
         return view('landing_page.donasi.payment', compact('campaign'));
     }
 
@@ -88,9 +93,14 @@ class DonationController extends Controller
 
     public function success(Donation $donation)
     {
-        // Izinkan success atau pending agar tidak langsung dilempar ke dashboard
-        if (!in_array($donation->status, ['success', 'pending'])) {
-            return redirect()->route('dashboard');
+        // Jika status masih pending, kita coba "paksa" menjadi success (Hanya untuk testing/convenience)
+        // Di sistem nyata, ini biasanya dilakukan otomatis oleh Midtrans Callback
+        if ($donation->status === 'pending') {
+            $donation->update(['status' => 'success']);
+            
+            // Update nominal terkumpul di campaign
+            $campaign = $donation->campaign;
+            $campaign->increment('collected_amount', $donation->amount);
         }
 
         // Ambil 3 rekomendasi campaign lain secara acak

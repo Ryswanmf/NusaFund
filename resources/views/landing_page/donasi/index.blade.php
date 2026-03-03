@@ -48,8 +48,11 @@
                         <img src="{{ $campImage }}" alt="{{ $camp->title }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
                         <div class="absolute top-6 left-6 flex flex-wrap gap-2">
-                            @if($camp->is_urgent)
+                            @if($camp->is_urgent && $camp->status !== 'completed')
                                 <span class="bg-red-600 text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-lg">Mendesak</span>
+                            @endif
+                            @if($camp->status === 'completed')
+                                <span class="bg-green-600 text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-lg">Selesai</span>
                             @endif
                             <span class="bg-white/90 backdrop-blur-md text-zinc-900 text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-lg">{{ $camp->category }}</span>
                         </div>
@@ -70,7 +73,7 @@
                                     <p class="text-maroon-700 font-black text-sm">{{ round($percent) }}%</p>
                                 </div>
                                 <div class="w-full bg-zinc-100 h-3 rounded-full overflow-hidden p-0.5 border border-zinc-50 shadow-inner">
-                                    <div class="bg-gradient-to-r from-maroon-700 to-maroon-500 h-full rounded-full transition-all duration-1000 shadow-sm" style="width: {{ min($percent, 100) }}%"></div>
+                                    <div class="{{ ($percent >= 100 || $camp->status === 'completed') ? 'bg-green-500' : 'bg-gradient-to-r from-maroon-700 to-maroon-500' }} h-full rounded-full transition-all duration-1000 shadow-sm" style="width: {{ min($percent, 100) }}%"></div>
                                 </div>
                             </div>
                             <div class="flex justify-between items-center py-4 border-y border-zinc-50">
@@ -78,18 +81,24 @@
                                     <div class="w-8 h-8 rounded-full bg-maroon-50 flex items-center justify-center text-maroon-700">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     </div>
-                                    <span class="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{{ $camp->end_date ? ceil(now()->diffInDays($camp->end_date)) . ' Hari Lagi' : 'Tak Terbatas' }}</span>
+                                    <span class="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{{ ($percent >= 100 || $camp->status === 'completed') ? 'Selesai' : ($camp->end_date ? ceil(now()->diffInDays($camp->end_date)) . ' Hari Lagi' : 'Tak Terbatas') }}</span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                                     </div>
-                                    <span class="text-[10px] font-black text-zinc-500 uppercase tracking-widest">0 Donatur</span>
+                                    <span class="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{{ $camp->donations_count ?? 0 }} Donatur</span>
                                 </div>
                             </div>
-                            <a href="{{ route('donasi.show', $camp->slug) }}" class="block w-full text-center bg-maroon-50 text-maroon-800 hover:bg-maroon-800 hover:text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-300 transform active:scale-95">
-                                Donasi Sekarang
-                            </a>
+                            @if($percent >= 100 || $camp->status === 'completed')
+                                <div class="block w-full text-center bg-zinc-100 text-zinc-400 py-4 rounded-2xl font-black text-sm uppercase tracking-widest cursor-not-allowed">
+                                    {{ $camp->status === 'completed' ? 'Kampanye Selesai' : 'Target Tercapai' }}
+                                </div>
+                            @else
+                                <a href="{{ route('donasi.show', $camp->slug) }}" class="block w-full text-center bg-maroon-50 text-maroon-800 hover:bg-maroon-800 hover:text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-300 transform active:scale-95">
+                                    Donasi Sekarang
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>

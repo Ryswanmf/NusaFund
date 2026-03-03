@@ -84,6 +84,7 @@
                         <option value="active" {{ old('status', $campaign->status) == 'active' ? 'selected' : '' }}>Aktif</option>
                         <option value="inactive" {{ old('status', $campaign->status) == 'inactive' ? 'selected' : '' }}>Nonaktif</option>
                         <option value="completed" {{ old('status', $campaign->status) == 'completed' ? 'selected' : '' }}>Selesai</option>
+                        <option value="suspended" {{ old('status', $campaign->status) == 'suspended' ? 'selected' : '' }}>Ditangguhkan (Suspended)</option>
                     </select>
                     @error('status') <p class="text-red-600 text-[10px] font-black mt-1 pl-2">{{ $message }}</p> @enderror
                 </div>

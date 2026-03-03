@@ -33,7 +33,9 @@
                             @endphp
                             <img src="{{ $campImage }}" alt="{{ $campaign->title }}" class="w-full h-full object-cover">
                             <div class="absolute top-6 left-6 flex gap-3">
-                                @if($campaign->is_urgent)
+                                @if($campaign->status === 'completed')
+                                    <span class="bg-green-600/90 backdrop-blur-md text-white text-xs font-bold px-5 py-2 rounded-full uppercase tracking-widest shadow-lg">Selesai</span>
+                                @elseif($campaign->is_urgent)
                                     <span class="bg-maroon-600/90 backdrop-blur-md text-white text-xs font-bold px-5 py-2 rounded-full uppercase tracking-widest shadow-lg">Mendesak</span>
                                 @endif
                                 <span class="bg-white/90 backdrop-blur-md text-zinc-900 text-xs font-bold px-5 py-2 rounded-full uppercase tracking-widest shadow-lg">{{ $campaign->category }}</span>
@@ -41,7 +43,7 @@
                         </div>
                         <h1 class="text-3xl md:text-5xl font-black text-zinc-900 leading-tight">{{ $campaign->title }}</h1>
                         
-                        <!-- Fundraiser Info (Statis sementara) -->
+                        <!-- Fundraiser Info -->
                         <div class="flex items-center gap-4 p-4 bg-white rounded-3xl border border-zinc-100 shadow-sm">
                             <div class="w-12 h-12 rounded-full bg-maroon-100 flex items-center justify-center text-maroon-700 font-bold">NF</div>
                             <div>
@@ -117,41 +119,60 @@
                 <!-- Sisi Kanan: Widget Donasi (Sticky) -->
                 <div class="space-y-8">
                     <div class="sticky top-24 space-y-6">
-                        <div class="bg-white p-8 rounded-[2.5rem] border border-zinc-100 shadow-2xl space-y-8">
+                        <div class="bg-white p-8 rounded-[2.5rem] border border-zinc-100 shadow-2xl space-y-8 relative overflow-hidden">
+                            @php $percent = ($campaign->collected_amount / $campaign->target_amount) * 100; @endphp
+                            
+                            @if($percent >= 100 || $campaign->status === 'completed')
+                                <div class="absolute top-0 left-0 right-0 bg-green-500 text-white text-[10px] font-black uppercase tracking-[0.3em] py-2 text-center">
+                                    {{ $campaign->status === 'completed' ? 'Kampanye Telah Selesai' : 'Target Alhamdulillah Tercapai' }}
+                                </div>
+                            @endif
+
                             <div>
                                 <p class="text-4xl font-black text-maroon-800 mb-2">Rp {{ number_format($campaign->collected_amount, 0, ',', '.') }}</p>
                                 <div class="flex justify-between items-center text-sm font-bold text-zinc-400 mb-4 uppercase tracking-widest">
                                     <span>Terkumpul dari <span class="text-zinc-900">Rp {{ number_format($campaign->target_amount, 0, ',', '.') }}</span></span>
-                                    @php $percent = ($campaign->collected_amount / $campaign->target_amount) * 100; @endphp
-                                    <span class="text-maroon-700">{{ round($percent) }}%</span>
+                                    <span class="{{ ($percent >= 100 || $campaign->status === 'completed') ? 'text-green-600' : 'text-maroon-700' }}">{{ round($percent) }}%</span>
                                 </div>
-                                <div class="w-full bg-zinc-100 h-4 rounded-full overflow-hidden mb-6">
-                                    <div class="bg-maroon-600 h-full rounded-full transition-all duration-1000 shadow-lg" style="width: {{ min($percent, 100) }}%"></div>
+                                <div class="w-full bg-zinc-100 h-4 rounded-full overflow-hidden mb-6 p-1 shadow-inner">
+                                    <div class="{{ ($percent >= 100 || $campaign->status === 'completed') ? 'bg-green-500' : 'bg-maroon-600' }} h-full rounded-full transition-all duration-1000 shadow-lg" style="width: {{ min($percent, 100) }}%"></div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="bg-zinc-50 p-4 rounded-2xl text-center">
-                                        <p class="text-2xl font-black text-zinc-900">0</p>
+                                        <p class="text-2xl font-black text-zinc-900">{{ $campaign->donations->where('status', 'success')->count() }}</p>
                                         <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Donatur</p>
                                     </div>
                                     <div class="bg-zinc-50 p-4 rounded-2xl text-center">
-                                        <p class="text-2xl font-black text-zinc-900">{{ ceil(now()->diffInDays($campaign->end_date)) }}</p>
+                                        @php 
+                                            $daysLeft = ceil(now()->diffInDays($campaign->end_date, false));
+                                        @endphp
+                                        <p class="text-2xl font-black text-zinc-900">{{ ($campaign->status === 'completed' || $daysLeft <= 0) ? '0' : $daysLeft }}</p>
                                         <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Hari Lagi</p>
                                     </div>
                                 </div>
                             </div>
 
-                            <a href="{{ route('donasi.pay', $campaign->slug) }}" class="block w-full text-center bg-amber-500 hover:bg-amber-400 text-maroon-950 py-5 rounded-2xl font-black text-xl shadow-xl shadow-amber-900/20 transition transform active:scale-95 group">
-                                Donasi Sekarang
-                                <svg class="w-6 h-6 inline-block ml-2 group-hover:translate-x-2 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                            </a>
+                            @if($percent >= 100 || $campaign->status === 'completed')
+                                <div class="space-y-4">
+                                    <div class="w-full text-center bg-zinc-100 text-zinc-400 py-5 rounded-3xl font-black text-lg cursor-not-allowed">
+                                        {{ $campaign->status === 'completed' ? 'Kampanye Selesai' : 'Target Tercapai' }}
+                                    </div>
+                                    <p class="text-[10px] text-center text-zinc-400 font-medium italic leading-relaxed px-4">Donasi untuk kampanye ini telah ditutup. Terima kasih atas kedermawanan Anda!</p>
+                                </div>
+                            @else
+                                <a href="{{ route('donasi.pay', $campaign->slug) }}" class="block w-full text-center bg-amber-500 hover:bg-amber-400 text-maroon-950 py-5 rounded-2xl font-black text-xl shadow-xl shadow-amber-900/20 transition transform active:scale-95 group">
+                                    Donasi Sekarang
+                                    <svg class="w-6 h-6 inline-block ml-2 group-hover:translate-x-2 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                </a>
 
-                            <!-- WhatsApp Confirmation -->
-                            <a href="https://wa.me/{{ str_replace([' ', '-', '+'], '', \App\Models\Setting::first()->whatsapp) }}?text=Halo%20Admin%20NusaFund,%20saya%20ingin%20konfirmasi%20donasi%20untuk%20kampanye:%20{{ urlencode($campaign->title) }}" 
-                               target="_blank"
-                               class="block w-full text-center bg-white border-2 border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white py-4 rounded-3xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.353-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.87 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                                Konfirmasi Transfer
-                            </a>
+                                <!-- WhatsApp Confirmation -->
+                                <a href="https://wa.me/{{ str_replace([' ', '-', '+'], '', \App\Models\Setting::first()->whatsapp) }}?text=Halo%20Admin%20NusaFund,%20saya%20ingin%20konfirmasi%20donasi%20untuk%20kampanye:%20{{ urlencode($campaign->title) }}" 
+                                   target="_blank"
+                                   class="block w-full text-center bg-white border-2 border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white py-4 rounded-3xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.353-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.87 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                    Konfirmasi Transfer
+                                </a>
+                            @endif
                         </div>
 
                         <!-- Info Keamanan -->
