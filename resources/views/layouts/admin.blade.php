@@ -28,8 +28,13 @@
                 <!-- Logo Area -->
                 <div class="p-8">
                     <a href="/" class="flex items-center gap-2 group transition">
-                        <span class="text-2xl font-black text-maroon-800 tracking-tighter">Nusa<span class="text-amber-500">Fund</span></span>
-                        <span class="bg-maroon-50 text-maroon-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">Admin</span>
+                        @php $settings = \App\Models\Setting::first(); @endphp
+                        @if($settings && $settings->site_logo)
+                            <img src="{{ asset('storage/' . $settings->site_logo) }}" alt="Logo" class="h-8 w-auto">
+                        @else
+                            <span class="text-2xl font-black text-maroon-800 tracking-tighter">Nusa<span class="text-amber-500">Fund</span></span>
+                        @endif
+                        <span class="bg-maroon-50 text-maroon-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase ml-2">Admin</span>
                     </a>
                 </div>
 

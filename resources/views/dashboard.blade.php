@@ -14,6 +14,24 @@
             $activeCampaigns = \App\Models\Campaign::where('status', 'active')->count();
             $pendingGalangDana = \App\Models\Fundraising::where('status', 'pending')->count();
             $totalDonors = \App\Models\User::where('usertype', 'user')->count();
+
+            // Ambil data 7 hari terakhir secara dinamis
+            $labels = [];
+            $dataDonasi = [];
+            for ($i = 6; $i >= 0; $i--) {
+                $date = now()->subDays($i);
+                $labels[] = $date->format('d M');
+                $dataDonasi[] = \App\Models\Donation::where('status', 'success')
+                    ->whereDate('created_at', $date->toDateString())
+                    ->sum('amount');
+            }
+
+            // Data kategori
+            $catStats = \App\Models\Donation::where('status', 'success')
+                ->join('campaigns', 'donations.campaign_id', '=', 'campaigns.id')
+                ->selectRaw('SUM(donations.amount) as total, campaigns.category')
+                ->groupBy('campaigns.category')
+                ->get();
         @endphp
 
         <div class="bg-white p-8 rounded-[2.5rem] border border-zinc-100 shadow-sm space-y-4">
@@ -64,13 +82,19 @@
                 <h3 class="text-xl font-black text-zinc-900">Tren Donasi Berhasil</h3>
                 <span class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">7 Hari Terakhir</span>
             </div>
-            <canvas id="donationChart" height="300"></canvas>
+            <div class="h-[300px]">
+                <canvas id="donationChart"></canvas>
+            </div>
         </div>
 
         <div class="bg-white p-8 md:p-10 rounded-[3rem] border border-zinc-100 shadow-sm flex flex-col">
-            <h3 class="text-xl font-black text-zinc-900 mb-10">Kategori Terpopuler</h3>
-            <div class="flex-1 flex items-center justify-center">
-                <canvas id="categoryChart"></canvas>
+            <h3 class="text-xl font-black text-zinc-900 mb-10">Sebaran Dana Kategori</h3>
+            <div class="flex-1 flex items-center justify-center min-h-[250px]">
+                @if($catStats->count() > 0)
+                    <canvas id="categoryChart"></canvas>
+                @else
+                    <p class="text-xs text-zinc-300 font-bold uppercase">Belum ada data</p>
+                @endif
             </div>
         </div>
     </div>
@@ -79,15 +103,15 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Donation Trend Chart
+    // 1. Donation Trend Chart
     const ctxDonation = document.getElementById('donationChart').getContext('2d');
     new Chart(ctxDonation, {
         type: 'line',
         data: {
-            labels: {!! json_encode(collect(range(6, 0))->map(fn($i) => now()->subDays($i)->format('d M'))->values()) !!},
+            labels: {!! json_encode($labels) !!},
             datasets: [{
                 label: 'Jumlah Donasi (Rp)',
-                data: [0, 0, 0, 0, 0, 0, 0], // Ganti dengan data real dari backend jika sudah ada transaksi
+                data: {!! json_encode($dataDonasi) !!},
                 borderColor: '#800000',
                 backgroundColor: 'rgba(128, 0, 0, 0.05)',
                 fill: true,
@@ -110,15 +134,16 @@
         }
     });
 
-    // Category Distribution Chart
+    // 2. Category Distribution Chart
+    @if($catStats->count() > 0)
     const ctxCategory = document.getElementById('categoryChart').getContext('2d');
     new Chart(ctxCategory, {
         type: 'doughnut',
         data: {
-            labels: ['Kemanusiaan', 'Pendidikan', 'Kesehatan', 'Bencana'],
+            labels: {!! json_encode($catStats->pluck('category')) !!},
             datasets: [{
-                data: [45, 25, 20, 10],
-                backgroundColor: ['#800000', '#FBBF24', '#10B981', '#3B82F6'],
+                data: {!! json_encode($catStats->pluck('total')) !!},
+                backgroundColor: ['#800000', '#FBBF24', '#10B981', '#3B82F6', '#6366F1', '#EC4899'],
                 borderWidth: 0,
                 weight: 0.5
             }]
@@ -131,6 +156,7 @@
             }
         }
     });
+    @endif
 </script>
 @endpush
 @endsection
