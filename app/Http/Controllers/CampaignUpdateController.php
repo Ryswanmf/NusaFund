@@ -21,7 +21,8 @@ class CampaignUpdateController extends Controller
 
     public function create()
     {
-        $campaigns = Campaign::where('status', 'active')->get();
+        // Izinkan tambah kabar untuk campaign yang aktif maupun yang sudah selesai
+        $campaigns = Campaign::whereIn('status', ['active', 'completed'])->get();
         return view('admin.updates.create', compact('campaigns'));
     }
 

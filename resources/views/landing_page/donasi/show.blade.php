@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="bg-zinc-50 py-8 md:py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-0">
             
             <!-- Breadcrumb -->
             <nav class="flex mb-8 text-sm font-medium text-zinc-400" aria-label="Breadcrumb">
@@ -67,6 +67,7 @@
                                 @endif
                             </button>
                             <button @click="tab = 'donatur'" :class="tab === 'donatur' ? 'border-maroon-700 text-maroon-700' : 'border-transparent text-zinc-400 hover:text-zinc-600'" class="px-8 py-4 font-bold text-sm md:text-lg border-b-4 transition-all whitespace-nowrap">Donatur ({{ $campaign->donations->where('status', 'success')->count() }})</button>
+                            <button @click="tab = 'doa'" :class="tab === 'doa' ? 'border-maroon-700 text-maroon-700' : 'border-transparent text-zinc-400 hover:text-zinc-600'" class="px-8 py-4 font-bold text-sm md:text-lg border-b-4 transition-all whitespace-nowrap">Doa & Dukungan</button>
                         </div>
 
                         <!-- Tab: Cerita -->
@@ -101,7 +102,7 @@
                         <div x-show="tab === 'donatur'" class="space-y-6">
                             @forelse($campaign->donations->where('status', 'success') as $don)
                             <div class="flex items-center gap-4 p-6 bg-white rounded-3xl border border-zinc-100">
-                                <div class="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400 font-black">
+                                <div class="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400 font-black uppercase">
                                     {{ substr($don->is_anonymous ? 'HA' : ($don->donor_name ?? 'NF'), 0, 2) }}
                                 </div>
                                 <div>
@@ -113,10 +114,33 @@
                             <div class="py-10 text-center text-zinc-400 font-medium">Belum ada donatur untuk saat ini. Jadi yang pertama membantu!</div>
                             @endforelse
                         </div>
+
+                        <!-- Tab: Doa & Dukungan -->
+                        <div x-show="tab === 'doa'" class="space-y-6">
+                            @php
+                                $prayers = $campaign->donations()->where('status', 'success')->whereNotNull('notes')->where('notes', '!=', '')->latest()->get();
+                            @endphp
+                            @forelse($prayers as $prayer)
+                            <div class="bg-white p-8 rounded-[2.5rem] border border-zinc-100 shadow-sm space-y-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-black text-zinc-900">{{ $prayer->is_anonymous ? 'Hamba Allah' : ($prayer->donor_name ?? 'Orang Baik') }}</p>
+                                        <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{{ $prayer->created_at->diffForHumans() }}</p>
+                                    </div>
+                                </div>
+                                <p class="text-zinc-600 leading-relaxed font-medium italic">"{{ $prayer->notes }}"</p>
+                            </div>
+                            @empty
+                            <div class="py-10 text-center text-zinc-400 font-medium">Belum ada doa yang terunggah. Amin untuk setiap niat baik Anda.</div>
+                            @endforelse
+                        </div>
                     </div>
                 </div>
 
-                <!-- Sisi Kanan: Widget Donasi (Sticky) -->
+                <!-- Sisi Kanan: Widget Donasi (Sticky Desktop) -->
                 <div class="space-y-8">
                     <div class="sticky top-24 space-y-6">
                         <div class="bg-white p-8 rounded-[2.5rem] border border-zinc-100 shadow-2xl space-y-8 relative overflow-hidden">
@@ -187,5 +211,18 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Sticky Bottom Mobile Button -->
+    <div class="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-xl border-t border-zinc-100 z-50 transition-all duration-500 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+        @if($percent >= 100 || $campaign->status === 'completed')
+            <div class="w-full text-center bg-zinc-100 text-zinc-400 py-4 rounded-2xl font-black text-sm uppercase tracking-widest cursor-not-allowed">
+                Kampanye Selesai
+            </div>
+        @else
+            <a href="{{ route('donasi.pay', $campaign->slug) }}" class="block w-full text-center bg-amber-500 text-maroon-950 py-4 rounded-2xl font-black text-lg shadow-xl shadow-amber-900/20 active:scale-95 transition-all">
+                Donasi Sekarang
+            </a>
+        @endif
     </div>
 @endsection
