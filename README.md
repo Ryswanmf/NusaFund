@@ -1,5 +1,13 @@
 # NusaFund - Platform Filantropi Modern dan Transparan
 
+![NusaFund Documentation](public/images/dokumentasi.png)
+
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)
+![Alpine.js](https://img.shields.io/badge/Alpine.js-3.x-8BC0D0?style=for-the-badge&logo=alpine.js)
+![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+![Midtrans](https://img.shields.io/badge/Midtrans-Payment_Gateway-003366?style=for-the-badge)
+
 NusaFund adalah platform penggalangan dana (fundraising), pengelolaan zakat, dan manajemen event kemanusiaan yang dibangun dengan fokus pada transparansi, otomatisasi pembayaran, dan pengalaman donatur yang premium.
 
 ## Fitur Utama
