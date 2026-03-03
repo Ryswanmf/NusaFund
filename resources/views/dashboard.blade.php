@@ -27,7 +27,7 @@
             }
 
             // Data kategori
-            $catStats = \App\Models\Donation::where('status', 'success')
+            $catStats = \App\Models\Donation::where('donations.status', 'success')
                 ->join('campaigns', 'donations.campaign_id', '=', 'campaigns.id')
                 ->selectRaw('SUM(donations.amount) as total, campaigns.category')
                 ->groupBy('campaigns.category')

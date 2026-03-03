@@ -142,18 +142,34 @@
                             <div class="space-y-4 pt-6 border-t border-zinc-50">
                                 <div class="flex justify-between text-sm">
                                     <span class="font-bold text-zinc-400 uppercase tracking-widest text-[10px]">Status</span>
-                                    <span class="font-black text-green-600 uppercase tracking-widest text-[10px]">Pendaftaran Dibuka</span>
+                                    @if($event->quota && $event->registrations()->count() >= $event->quota)
+                                        <span class="font-black text-red-600 uppercase tracking-widest text-[10px]">Kuota Penuh</span>
+                                    @else
+                                        <span class="font-black text-green-600 uppercase tracking-widest text-[10px]">Pendaftaran Dibuka</span>
+                                    @endif
                                 </div>
                                 <div class="flex justify-between text-sm">
                                     <span class="font-bold text-zinc-400 uppercase tracking-widest text-[10px]">Kuota Peserta</span>
-                                    <span class="font-black text-zinc-900 uppercase tracking-widest text-[10px]">{{ $event->quota ?: 'Terbuka Umum' }}</span>
+                                    <span class="font-black text-zinc-900 uppercase tracking-widest text-[10px]">
+                                        {{ $event->quota ? ($event->quota - $event->registrations()->count()) . ' Tersisa' : 'Terbuka Umum' }}
+                                    </span>
                                 </div>
                             </div>
 
-                            <a href="#" class="block w-full text-center bg-zinc-900 text-white hover:bg-maroon-700 py-5 rounded-3xl font-black text-lg shadow-xl shadow-zinc-900/20 transition transform active:scale-95 group">
-                                Daftar Sekarang
-                                <svg class="w-6 h-6 inline-block ml-2 group-hover:translate-x-2 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                            </a>
+                            @if($event->quota && $event->registrations()->count() >= $event->quota)
+                                <div class="block w-full text-center bg-zinc-100 text-zinc-400 py-5 rounded-3xl font-black text-lg cursor-not-allowed">
+                                    Kuota Penuh
+                                </div>
+                            @elseif($event->status !== 'active')
+                                <div class="block w-full text-center bg-zinc-100 text-zinc-400 py-5 rounded-3xl font-black text-lg cursor-not-allowed">
+                                    Pendaftaran Ditutup
+                                </div>
+                            @else
+                                <a href="{{ route('event.register', $event->slug) }}" class="block w-full text-center bg-zinc-900 text-white hover:bg-maroon-700 py-5 rounded-3xl font-black text-lg shadow-xl shadow-zinc-900/20 transition transform active:scale-95 group">
+                                    Daftar Sekarang
+                                    <svg class="w-6 h-6 inline-block ml-2 group-hover:translate-x-2 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                </a>
+                            @endif
                         </div>
 
                         <!-- Info Tambahan -->

@@ -46,8 +46,18 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/event/{slug}', 'publicShow')->name('event.show');
 });
 
+// Pendaftaran Event
+Route::get('/event/{event:slug}/daftar', [\App\Http\Controllers\EventRegistrationController::class, 'create'])->name('event.register');
+Route::post('/event/{event:slug}/daftar', [\App\Http\Controllers\EventRegistrationController::class, 'store'])->name('event.submit');
+Route::get('/event/pendaftaran-berhasil/{registration_id}', [\App\Http\Controllers\EventRegistrationController::class, 'success'])->name('event.success');
+
 // Zakat
-Route::get('/zakat', [ZakatController::class, 'publicIndex'])->name('zakat.index');
+Route::controller(ZakatController::class)->group(function () {
+    Route::get('/zakat', 'publicIndex')->name('zakat.index');
+    Route::get('/zakat/{slug}', 'publicShow')->name('zakat.show');
+    Route::post('/zakat/{zakat:slug}/bayar', 'pay')->name('zakat.pay');
+    Route::get('/zakat/berhasil/{transaction_id}', 'success')->name('zakat.success');
+});
 
 // FAQ
 Route::get('/faq', [FaqController::class, 'publicIndex'])->name('faq.index');
@@ -94,6 +104,15 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/transaksi', [\App\Http\Controllers\Admin\DonationTransactionController::class, 'index'])->name('transactions.index');
     Route::post('/transaksi/{donation}/confirm', [\App\Http\Controllers\Admin\DonationTransactionController::class, 'confirm'])->name('transactions.confirm');
     Route::delete('/transaksi/{donation}', [\App\Http\Controllers\Admin\DonationTransactionController::class, 'destroy'])->name('transactions.destroy');
+
+    // Transaksi Zakat
+    Route::get('/zakat-masuk', [\App\Http\Controllers\Admin\ZakatTransactionController::class, 'index'])->name('zakat_transactions.index');
+    Route::post('/zakat-masuk/{payment}/confirm', [\App\Http\Controllers\Admin\ZakatTransactionController::class, 'confirm'])->name('zakat_transactions.confirm');
+    Route::delete('/zakat-masuk/{payment}', [\App\Http\Controllers\Admin\ZakatTransactionController::class, 'destroy'])->name('zakat_transactions.destroy');
+
+    // Peserta Event
+    Route::get('/peserta-event', [\App\Http\Controllers\Admin\EventRegistrationController::class, 'index'])->name('event_registrations.index');
+    Route::delete('/peserta-event/{registration}', [\App\Http\Controllers\Admin\EventRegistrationController::class, 'destroy'])->name('event_registrations.destroy');
 
     Route::resource('donatur', \App\Http\Controllers\UserController::class)->parameters(['donatur' => 'donatur']);
     Route::resource('kategori', CategoryController::class)->parameters(['kategori' => 'category']);

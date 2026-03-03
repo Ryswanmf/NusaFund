@@ -72,7 +72,7 @@
                                 </div>
                             </div>
                             
-                            <a href="#" class="block w-full text-center bg-maroon-800 text-white hover:bg-zinc-900 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-300 transform active:scale-95 shadow-xl shadow-maroon-900/20">
+                            <a href="{{ route('zakat.show', $item->slug) }}" class="block w-full text-center bg-maroon-800 text-white hover:bg-zinc-900 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-300 transform active:scale-95 shadow-xl shadow-maroon-900/20">
                                 Bayar Zakat
                             </a>
                         </div>

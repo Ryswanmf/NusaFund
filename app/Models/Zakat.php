@@ -25,7 +25,12 @@ class Zakat extends Model
     {
         parent::boot();
         static::creating(function ($zakat) {
-            $zakat->slug = Str::slug($zakat->title) . '-' . Str::random(5);
+            $zakat->slug = \Illuminate\Support\Str::slug($zakat->title) . '-' . \Illuminate\Support\Str::random(5);
         });
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(ZakatPayment::class);
     }
 }

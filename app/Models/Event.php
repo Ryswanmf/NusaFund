@@ -33,6 +33,11 @@ class Event extends Model
         return $this->belongsTo(Campaign::class);
     }
 
+    public function registrations()
+    {
+        return $this->hasMany(EventRegistration::class);
+    }
+
     protected static function boot()
     {
         parent::boot();

@@ -39,8 +39,7 @@ class UserDashboardController extends Controller
             ->get();
 
         // Data untuk Grafik Sebaran Kategori
-        $categoryStats = Donation::where('user_id', $user->id)
-            ->where('status', 'success')
+        $categoryStats = Donation::where('donations.status', 'success')
             ->join('campaigns', 'donations.campaign_id', '=', 'campaigns.id')
             ->selectRaw('COUNT(*) as count, campaigns.category')
             ->groupBy('campaigns.category')
