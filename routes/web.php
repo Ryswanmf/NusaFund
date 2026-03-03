@@ -15,43 +15,32 @@ use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\ZakatController;
+use App\Http\Controllers\ChatBotController;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Public Routes
-|--------------------------------------------------------------------------
-*/
 
 Route::get('/', [CampaignController::class, 'publicHome'])->name('home');
 
-// Donasi
 Route::controller(CampaignController::class)->group(function () {
     Route::get('/donasi', 'publicIndex')->name('donasi.index');
     Route::get('/donasi/{slug}', 'publicShow')->name('donasi.show');
 });
 
-// Transaksi Donasi
 Route::get('/donasi/{campaign:slug}/bayar', [DonationController::class, 'create'])->name('donasi.pay');
 Route::post('/donasi/{campaign:slug}/bayar', [DonationController::class, 'store'])->name('donasi.submit');
 Route::get('/donasi/berhasil/{donation:transaction_id}', [DonationController::class, 'success'])->name('donasi.success');
 Route::get('/donasi/sertifikat/{transaction_id}', [UserDashboardController::class, 'certificate'])->name('donation.certificate');
 
-// Midtrans Callback
 Route::post('/midtrans/callback', [MidtransController::class, 'callback'])->name('midtrans.callback');
 
-// Event
 Route::controller(EventController::class)->group(function () {
     Route::get('/event', 'publicIndex')->name('event.index');
     Route::get('/event/{slug}', 'publicShow')->name('event.show');
 });
 
-// Pendaftaran Event
 Route::get('/event/{event:slug}/daftar', [\App\Http\Controllers\EventRegistrationController::class, 'create'])->name('event.register');
 Route::post('/event/{event:slug}/daftar', [\App\Http\Controllers\EventRegistrationController::class, 'store'])->name('event.submit');
 Route::get('/event/pendaftaran-berhasil/{registration_id}', [\App\Http\Controllers\EventRegistrationController::class, 'success'])->name('event.success');
 
-// Zakat
 Route::controller(ZakatController::class)->group(function () {
     Route::get('/zakat', 'publicIndex')->name('zakat.index');
     Route::get('/zakat/{slug}', 'publicShow')->name('zakat.show');
@@ -59,13 +48,10 @@ Route::controller(ZakatController::class)->group(function () {
     Route::get('/zakat/berhasil/{transaction_id}', 'success')->name('zakat.success');
 });
 
-// FAQ
 Route::get('/faq', [FaqController::class, 'publicIndex'])->name('faq.index');
 
-// ChatBot
 Route::post('/chatbot/message', [ChatBotController::class, 'message'])->name('chatbot.message');
 
-// Galang Dana
 Route::controller(FundraisingController::class)->prefix('galang-dana')->name('fundraising.')->group(function () {
     Route::get('/', 'publicIndex')->name('index');
     Route::get('/panduan', 'publicGuide')->name('guide');
@@ -74,17 +60,10 @@ Route::controller(FundraisingController::class)->prefix('galang-dana')->name('fu
     Route::get('/{slug}', 'publicShow')->name('show');
 });
 
-// Bantuan & Tentang Kami
 Route::get('/pusat-bantuan', [SupportController::class, 'publicIndex'])->name('support.index');
 Route::get('/syarat-ketentuan', [App\Http\Controllers\TermController::class, 'publicIndex'])->name('terms.index');
 Route::get('/kebijakan-privasi', [App\Http\Controllers\PrivacyPolicyController::class, 'publicIndex'])->name('privacy.index');
 Route::get('/tentang-kami', [AboutController::class, 'publicIndex'])->name('about');
-
-/*
-|--------------------------------------------------------------------------
-| Admin Routes
-|--------------------------------------------------------------------------
-*/
 
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     
@@ -92,7 +71,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
         return view('dashboard');
     })->name('dashboard');
 
-    // CRUD Resources
     Route::resource('donasi', CampaignController::class);
     Route::resource('event', EventController::class);
     Route::resource('zakat', ZakatController::class);
@@ -100,17 +78,14 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::resource('faq', FaqController::class);
     Route::resource('updates', CampaignUpdateController::class);
     
-    // Transaksi Donasi
     Route::get('/transaksi', [\App\Http\Controllers\Admin\DonationTransactionController::class, 'index'])->name('transactions.index');
     Route::post('/transaksi/{donation}/confirm', [\App\Http\Controllers\Admin\DonationTransactionController::class, 'confirm'])->name('transactions.confirm');
     Route::delete('/transaksi/{donation}', [\App\Http\Controllers\Admin\DonationTransactionController::class, 'destroy'])->name('transactions.destroy');
 
-    // Transaksi Zakat
     Route::get('/zakat-masuk', [\App\Http\Controllers\Admin\ZakatTransactionController::class, 'index'])->name('zakat_transactions.index');
     Route::post('/zakat-masuk/{payment}/confirm', [\App\Http\Controllers\Admin\ZakatTransactionController::class, 'confirm'])->name('zakat_transactions.confirm');
     Route::delete('/zakat-masuk/{payment}', [\App\Http\Controllers\Admin\ZakatTransactionController::class, 'destroy'])->name('zakat_transactions.destroy');
 
-    // Peserta Event
     Route::get('/peserta-event', [\App\Http\Controllers\Admin\EventRegistrationController::class, 'index'])->name('event_registrations.index');
     Route::delete('/peserta-event/{registration}', [\App\Http\Controllers\Admin\EventRegistrationController::class, 'destroy'])->name('event_registrations.destroy');
 
@@ -120,7 +95,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::resource('syarat-ketentuan', \App\Http\Controllers\TermController::class);
     Route::resource('kebijakan-privasi', \App\Http\Controllers\PrivacyPolicyController::class);
 
-    // Custom Admin Routes
     Route::controller(HeroBannerController::class)->prefix('hero')->name('hero.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::put('/', 'update')->name('update');
@@ -144,14 +118,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     });
 });
 
-/*
-|--------------------------------------------------------------------------
-| User Profile & Dashboard Routes
-|--------------------------------------------------------------------------
-*/
-
 Route::middleware(['auth', 'verified'])->group(function () {
-    // User Dashboard
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
