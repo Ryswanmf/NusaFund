@@ -145,9 +145,32 @@
                 </a>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10" x-data="{ loading: true }" x-init="setTimeout(() => loading = false, 800)">
                 @forelse($urgentCampaigns as $camp)
-                <div class="bg-white rounded-[2.5rem] overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col h-full group">
+                <!-- Skeleton Card -->
+                <div x-show="loading" class="bg-white rounded-[2.5rem] overflow-hidden border border-zinc-100 shadow-sm flex flex-col h-full">
+                    <div class="aspect-[16/10] skeleton w-full"></div>
+                    <div class="p-8 flex flex-col flex-1 space-y-4">
+                        <div class="h-6 skeleton w-3/4 rounded-lg"></div>
+                        <div class="h-4 skeleton w-full rounded-lg"></div>
+                        <div class="mt-auto space-y-4 pt-4">
+                            <div class="flex justify-between">
+                                <div class="h-3 skeleton w-20 rounded-full"></div>
+                                <div class="h-3 skeleton w-24 rounded-full"></div>
+                            </div>
+                            <div class="h-3 skeleton w-full rounded-full"></div>
+                            <div class="h-14 skeleton w-full rounded-2xl"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real Card -->
+                <div x-show="!loading" 
+                     x-transition:enter="transition ease-out duration-500"
+                     x-transition:enter-start="opacity-0 translate-y-4"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="bg-white rounded-[2.5rem] overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col h-full group"
+                     x-cloak>
                     <div class="relative overflow-hidden aspect-[16/10]">
                         @if($camp->image)
                             <img src="{{ asset('storage/' . $camp->image) }}" alt="{{ $camp->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
