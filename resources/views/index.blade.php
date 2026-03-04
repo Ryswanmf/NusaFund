@@ -104,8 +104,11 @@
     </section>
 
     <!-- Kategori Pilihan -->
-    <section class="py-24 bg-zinc-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-24 bg-zinc-50 overflow-hidden" 
+             x-data="{ revealed: false }" 
+             x-intersect.margin.-100px="revealed = true">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-1000 transform"
+             :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                 <div class="max-w-xl">
                     <h2 class="text-3xl md:text-4xl font-black text-zinc-900 mb-4 tracking-tight">Pilih Kategori Kebaikan</h2>
@@ -142,8 +145,11 @@
     </section>
 
     <!-- Donasi Mendesak -->
-    <section class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-24 bg-white overflow-hidden"
+             x-data="{ revealed: false }" 
+             x-intersect.margin.-100px="revealed = true">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-1000 transform"
+             :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                 <div class="max-w-xl">
                     <h2 class="text-3xl md:text-4xl font-black text-zinc-900 mb-4 tracking-tight">Donasi <span class="text-maroon-700">Mendesak</span></h2>
@@ -244,8 +250,11 @@
     </section>
 
     <!-- Cara Berdonasi -->
-    <section class="py-24 bg-maroon-900 text-white overflow-hidden relative shadow-inner">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section class="py-24 bg-maroon-900 text-white overflow-hidden relative shadow-inner"
+             x-data="{ revealed: false }" 
+             x-intersect.margin.-100px="revealed = true">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 transition-all duration-1000 transform"
+             :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'">
             <div class="text-center mb-20">
                 <h2 class="text-3xl md:text-5xl font-black mb-6">3 Langkah Mudah Berbagi</h2>
                 <p class="text-maroon-100 max-w-2xl mx-auto text-lg opacity-80">Proses yang aman, cepat, dan transparan untuk memastikan bantuan Anda tersalurkan dengan tepat.</p>
@@ -276,8 +285,11 @@
     </section>
 
     <!-- Testimoni & Dampak -->
-    <section class="py-24 bg-white overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-24 bg-white overflow-hidden"
+             x-data="{ revealed: false }" 
+             x-intersect.margin.-100px="revealed = true">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-1000 transform"
+             :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'">
             <div class="grid lg:grid-cols-2 gap-20 items-center">
                 <div>
                     <span class="text-maroon-600 font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Kisah Kebaikan</span>
@@ -330,8 +342,11 @@
     </section>
 
     <!-- Mulai Galang Dana (CTA) -->
-    <section class="py-24 bg-white relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-24 bg-white relative overflow-hidden"
+             x-data="{ revealed: false }" 
+             x-intersect.margin.-100px="revealed = true">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-1000 transform"
+             :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'">
             <div class="bg-maroon-800 rounded-[3.5rem] p-10 md:p-24 text-white text-center relative overflow-hidden shadow-2xl">
                 <!-- Decor -->
                 <div class="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
