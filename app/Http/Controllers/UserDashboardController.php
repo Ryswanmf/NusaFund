@@ -34,7 +34,7 @@ class UserDashboardController extends Controller
             ->where('status', 'success')
             ->selectRaw('SUM(amount) as total, DATE_FORMAT(created_at, "%b") as month')
             ->groupBy('month')
-            ->orderBy('created_at')
+            ->orderByRaw('MIN(created_at) ASC')
             ->take(6)
             ->get();
 
