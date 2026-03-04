@@ -145,84 +145,90 @@
                 </a>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10" x-data="{ loading: true }" x-init="setTimeout(() => loading = false, 800)">
-                @forelse($urgentCampaigns as $camp)
-                <!-- Skeleton Card -->
-                <div x-show="loading" class="bg-white rounded-[2.5rem] overflow-hidden border border-zinc-100 shadow-sm flex flex-col h-full">
-                    <div class="aspect-[16/10] skeleton w-full"></div>
-                    <div class="p-8 flex flex-col flex-1 space-y-4">
-                        <div class="h-6 skeleton w-3/4 rounded-lg"></div>
-                        <div class="h-4 skeleton w-full rounded-lg"></div>
-                        <div class="mt-auto space-y-4 pt-4">
-                            <div class="flex justify-between">
-                                <div class="h-3 skeleton w-20 rounded-full"></div>
-                                <div class="h-3 skeleton w-24 rounded-full"></div>
+            <div x-data="{ loading: true }" x-init="setTimeout(() => loading = false, 1200)" class="relative">
+                <!-- Skeleton Loader (Grid Overlay) -->
+                <div x-show="loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    @for($i = 0; $i < 3; $i++)
+                    <div class="bg-white rounded-[2.5rem] overflow-hidden border border-zinc-100 shadow-sm flex flex-col h-full">
+                        <div class="aspect-[16/10] skeleton w-full"></div>
+                        <div class="p-8 flex flex-col flex-1 space-y-4">
+                            <div class="h-6 skeleton w-3/4 rounded-lg"></div>
+                            <div class="h-4 skeleton w-full rounded-lg"></div>
+                            <div class="mt-auto space-y-4 pt-4">
+                                <div class="flex justify-between">
+                                    <div class="h-3 skeleton w-16 rounded-full"></div>
+                                    <div class="h-3 skeleton w-20 rounded-full"></div>
+                                </div>
+                                <div class="h-3 skeleton w-full rounded-full"></div>
+                                <div class="h-14 skeleton w-full rounded-2xl"></div>
                             </div>
-                            <div class="h-3 skeleton w-full rounded-full"></div>
-                            <div class="h-14 skeleton w-full rounded-2xl"></div>
                         </div>
                     </div>
+                    @endfor
                 </div>
 
-                <!-- Real Card -->
+                <!-- Real Content -->
                 <div x-show="!loading" 
-                     x-transition:enter="transition ease-out duration-500"
-                     x-transition:enter-start="opacity-0 translate-y-4"
+                     x-transition:enter="transition ease-out duration-700"
+                     x-transition:enter-start="opacity-0 translate-y-8"
                      x-transition:enter-end="opacity-100 translate-y-0"
-                     class="bg-white rounded-[2.5rem] overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col h-full group"
+                     class="grid md:grid-cols-2 lg:grid-cols-3 gap-10"
                      x-cloak>
-                    <div class="relative overflow-hidden aspect-[16/10]">
-                        @if($camp->image)
-                            <img src="{{ asset('storage/' . $camp->image) }}" alt="{{ $camp->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
-                        @else
-                            <div class="w-full h-full bg-zinc-100 flex items-center justify-center text-zinc-400 font-bold tracking-tighter text-2xl">NusaFund</div>
-                        @endif
-                        <div class="absolute top-5 left-5">
-                            <span class="bg-maroon-600/90 backdrop-blur-md text-white text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">{{ $camp->is_urgent ? 'Mendesak' : $camp->category }}</span>
-                        </div>
-                    </div>
-                    <div class="p-8 flex flex-col flex-1">
-                        <a href="{{ route('donasi.show', $camp->slug) }}" class="group/title">
-                            <h3 class="text-xl font-bold text-zinc-900 mb-4 line-clamp-2 group-hover/title:text-maroon-700 transition">{{ $camp->title }}</h3>
-                        </a>
-                        
-                        <div class="mt-auto space-y-4">
-                            <div>
-                                <div class="flex justify-between text-sm mb-2 font-semibold">
-                                    <span class="text-zinc-400 uppercase tracking-wider text-[10px]">Terkumpul</span>
-                                    <span class="text-maroon-700 font-black">Rp {{ number_format($camp->collected_amount, 0, ',', '.') }}</span>
-                                </div>
-                                <div class="w-full bg-zinc-100 h-3 rounded-full overflow-hidden">
-                                    @php $percent = ($camp->collected_amount / $camp->target_amount) * 100; @endphp
-                                    <div class="{{ ($percent >= 100 || $camp->status === 'completed') ? 'bg-green-500' : 'bg-maroon-600' }} h-full rounded-full transition-all duration-1000" style="width: {{ min($percent, 100) }}%"></div>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                <span class="{{ ($percent >= 100 || $camp->status === 'completed') ? 'text-green-600' : 'text-maroon-600' }}">
-                                    {{ round($percent) }}% {{ ($percent >= 100 || $camp->status === 'completed') ? 'Tercapai' : 'Tercapai' }}
-                                </span>
-                                <span class="flex items-center gap-1.5 bg-zinc-50 px-3 py-1 rounded-full">
-                                    <svg class="w-3 h-3 text-amber-500" fill="currentColor" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                                    {{ $camp->donations_count ?? 0 }} Donatur
-                                </span>
-                            </div>
-                            @if($percent >= 100 || $camp->status === 'completed')
-                                <div class="block w-full text-center mt-4 bg-zinc-100 text-zinc-400 py-4 rounded-2xl font-black cursor-not-allowed uppercase tracking-widest text-xs">
-                                    {{ $camp->status === 'completed' ? 'Kampanye Selesai' : 'Target Tercapai' }}
-                                </div>
+                    @forelse($urgentCampaigns as $camp)
+                    <div class="bg-white rounded-[2.5rem] overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col h-full group">
+                        <div class="relative overflow-hidden aspect-[16/10]">
+                            @if($camp->image)
+                                <img src="{{ asset('storage/' . $camp->image) }}" alt="{{ $camp->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
                             @else
-                                <a href="{{ route('donasi.show', $camp->slug) }}" class="block w-full text-center mt-4 bg-maroon-50 text-maroon-700 hover:bg-maroon-700 hover:text-white py-4 rounded-2xl font-black transition-all duration-300 transform active:scale-95">
-                                    Donasi Sekarang
-                                </a>
+                                <div class="w-full h-full bg-zinc-100 flex items-center justify-center text-zinc-400 font-bold tracking-tighter text-2xl">NusaFund</div>
                             @endif
+                            <div class="absolute top-5 left-5">
+                                <span class="bg-maroon-600/90 backdrop-blur-md text-white text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">{{ $camp->is_urgent ? 'Mendesak' : $camp->category }}</span>
+                            </div>
+                        </div>
+                        <div class="p-8 flex flex-col flex-1">
+                            <a href="{{ route('donasi.show', $camp->slug) }}" class="group/title">
+                                <h3 class="text-xl font-bold text-zinc-900 mb-4 line-clamp-2 group-hover/title:text-maroon-700 transition">{{ $camp->title }}</h3>
+                            </a>
+                            
+                            <div class="mt-auto space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-2 font-semibold">
+                                        <span class="text-zinc-400 uppercase tracking-wider text-[10px]">Terkumpul</span>
+                                        <span class="text-maroon-700 font-black">Rp {{ number_format($camp->collected_amount, 0, ',', '.') }}</span>
+                                    </div>
+                                    <div class="w-full bg-zinc-100 h-3 rounded-full overflow-hidden">
+                                        @php $percent = ($camp->collected_amount / $camp->target_amount) * 100; @endphp
+                                        <div class="{{ ($percent >= 100 || $camp->status === 'completed') ? 'bg-green-500' : 'bg-maroon-600' }} h-full rounded-full transition-all duration-1000" style="width: {{ min($percent, 100) }}%"></div>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                                    <span class="{{ ($percent >= 100 || $camp->status === 'completed') ? 'text-green-600' : 'text-maroon-600' }}">
+                                        {{ round($percent) }}% Tercapai
+                                    </span>
+                                    <span class="flex items-center gap-1.5 bg-zinc-50 px-3 py-1 rounded-full">
+                                        <svg class="w-3 h-3 text-amber-500" fill="currentColor" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                        {{ $camp->donations_count ?? 0 }} Donatur
+                                    </span>
+                                </div>
+                                @if($percent >= 100 || $camp->status === 'completed')
+                                    <div class="block w-full text-center mt-4 bg-zinc-100 text-zinc-400 py-4 rounded-2xl font-black cursor-not-allowed uppercase tracking-widest text-xs">
+                                        {{ $camp->status === 'completed' ? 'Kampanye Selesai' : 'Target Tercapai' }}
+                                    </div>
+                                @else
+                                    <a href="{{ route('donasi.show', $camp->slug) }}" class="block w-full text-center mt-4 bg-maroon-50 text-maroon-700 hover:bg-maroon-700 hover:text-white py-4 rounded-2xl font-black transition-all duration-300 transform active:scale-95">
+                                        Donasi Sekarang
+                                    </a>
+                                @endif
+                            </div>
                         </div>
                     </div>
+                    @empty
+                    <div class="col-span-full py-20 text-center">
+                        <p class="text-zinc-400 font-medium">Belum ada kampanye aktif saat ini.</p>
+                    </div>
+                    @endforelse
                 </div>
-                @empty
-                <div class="col-span-full py-20 text-center">
-                    <p class="text-zinc-400 font-medium">Belum ada kampanye aktif saat ini.</p>
-                </div>
-                @endforelse
             </div>
         </div>
     </section>
