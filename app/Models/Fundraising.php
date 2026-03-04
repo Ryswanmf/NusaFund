@@ -14,11 +14,15 @@ class Fundraising extends Model
         'title',
         'slug',
         'description',
+        'category',
         'image',
         'target_amount',
         'collected_amount',
+        'end_date',
         'organization_name',
-        'status'
+        'phone',
+        'status',
+        'user_id'
     ];
 
     protected static function boot()

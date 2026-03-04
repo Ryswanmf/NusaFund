@@ -69,6 +69,7 @@ class FundraisingController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'organization_name' => 'required|string|max:255',
             'category' => 'required',
             'target_amount' => 'required|numeric|min:1000000',
             'description' => 'required|min:100',

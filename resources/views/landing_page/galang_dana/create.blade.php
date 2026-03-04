@@ -27,6 +27,14 @@
                             @error('title') <p class="text-red-600 text-[10px] font-black mt-1 pl-2">{{ $message }}</p> @enderror
                         </div>
                         <div class="space-y-2">
+                            <label class="text-[10px] font-black text-zinc-400 uppercase tracking-widest pl-2">Nama Organisasi / Penggalang</label>
+                            <input type="text" name="organization_name" value="{{ old('organization_name') }}" required class="w-full bg-zinc-50 border-none rounded-2xl py-5 px-8 focus:ring-2 focus:ring-maroon-500 font-bold text-zinc-900" placeholder="Contoh: Yayasan Kebaikan Bersama">
+                            @error('organization_name') <p class="text-red-600 text-[10px] font-black mt-1 pl-2">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-2">
                             <label class="text-[10px] font-black text-zinc-400 uppercase tracking-widest pl-2">Kategori</label>
                             <select name="category" required class="w-full bg-zinc-50 border-none rounded-2xl py-5 px-8 focus:ring-2 focus:ring-maroon-500 font-bold text-zinc-900 appearance-none">
                                 <option value="">Pilih Kategori</option>
