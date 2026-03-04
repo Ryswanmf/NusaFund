@@ -35,11 +35,11 @@
                 
                 <!-- Sisi Kiri: Logo & Search -->
                 <div class="flex items-center gap-8 flex-1">
-                    <a href="/" class="flex-shrink-0 flex items-center gap-2 group transition">
+                    <a href="/" class="flex-shrink-0 flex items-center gap-2 group transition-all duration-300 hover:scale-105 active:scale-95 origin-left">
                         @if($settings && $settings->site_logo)
                             <img src="{{ asset('storage/' . $settings->site_logo) }}" alt="Logo" class="h-10 w-auto">
                         @else
-                            <span class="text-2xl font-bold tracking-tight text-white group-hover:text-amber-400 transition">Nusa<span class="text-amber-400 font-extrabold group-hover:text-white transition">Fund</span></span>
+                            <span class="text-2xl font-bold tracking-tight text-white group-hover:text-amber-400 transition-all duration-300">Nusa<span class="text-amber-400 font-extrabold group-hover:text-white transition-all duration-300">Fund</span></span>
                         @endif
                     </a>
                     
