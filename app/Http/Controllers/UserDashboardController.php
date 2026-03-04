@@ -67,4 +67,14 @@ class UserDashboardController extends Controller
 
         return view('landing_page.user.certificate', compact('donation', 'donorName'));
     }
+
+    public function fundraisings()
+    {
+        $user = Auth::user();
+        $fundraisings = \App\Models\Fundraising::where('user_id', $user->id)
+            ->latest()
+            ->paginate(10);
+
+        return view('landing_page.user.fundraisings', compact('fundraisings'));
+    }
 }

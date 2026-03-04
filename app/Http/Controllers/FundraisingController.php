@@ -89,7 +89,7 @@ class FundraisingController extends Controller
 
         Fundraising::create($data);
 
-        return redirect()->route('fundraising.index')->with('success', 'Pengajuan galang dana berhasil dikirim! Tim kami akan memverifikasi dalam 1x24 jam.');
+        return redirect()->route('dashboard.fundraising')->with('success', 'Pengajuan galang dana berhasil dikirim! Tim kami akan memverifikasi dalam 1x24 jam.');
     }
 
     public function publicShow($slug)
