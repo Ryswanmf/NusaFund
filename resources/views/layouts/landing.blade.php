@@ -44,15 +44,19 @@
                     </a>
                     
                     <!-- Search Bar (Hidden on mobile) -->
-                    <div class="hidden md:block flex-1 max-w-md">
-                        <form action="{{ route('donasi.index') }}" method="GET" class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-maroon-300">
+                    <div class="hidden md:block flex-1 max-w-md" x-data="{ searchFocused: false }">
+                        <form action="{{ route('donasi.index') }}" method="GET" class="relative group">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors duration-300"
+                                  :class="searchFocused ? 'text-amber-400' : 'text-maroon-300'">
                                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             </span>
                             <input type="text" 
                                    name="search"
+                                   @focus="searchFocused = true"
+                                   @blur="searchFocused = false"
                                    value="{{ request('search') }}"
-                                   class="block w-full bg-maroon-900/50 border border-maroon-700/50 rounded-full py-2 pl-10 pr-3 text-sm placeholder-maroon-300 text-white focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition" 
+                                   class="block w-full bg-maroon-900/50 border border-maroon-700/50 rounded-full py-2.5 pl-10 pr-3 text-sm placeholder-maroon-300 text-white focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-300"
+                                   :class="searchFocused ? 'bg-maroon-900 shadow-[0_0_20px_rgba(251,191,36,0.15)] scale-[1.02]' : ''"
                                    placeholder="Cari campaign kebaikan...">
                         </form>
                     </div>
