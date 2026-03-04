@@ -72,23 +72,33 @@
     <!-- Stats Section -->
     <section class="bg-white py-16 border-b border-zinc-100 relative z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-                <div class="space-y-1">
-                    <p class="text-4xl font-black text-maroon-800">500+</p>
-                    <p class="text-sm text-zinc-500 font-semibold tracking-wide uppercase">Campaign Aktif</p>
-                </div>
-                <div class="space-y-1">
-                    <p class="text-4xl font-black text-maroon-800">12k+</p>
-                    <p class="text-sm text-zinc-500 font-semibold tracking-wide uppercase">Donatur Setia</p>
-                </div>
-                <div class="space-y-1">
-                    <p class="text-4xl font-black text-maroon-800">45+</p>
-                    <p class="text-sm text-zinc-500 font-semibold tracking-wide uppercase">Kota Terjangkau</p>
-                </div>
-                <div class="space-y-1">
-                    <p class="text-4xl font-black text-maroon-800">200k+</p>
-                    <p class="text-sm text-zinc-500 font-semibold tracking-wide uppercase">Penerima Manfaat</p>
-                </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-12 text-center" x-data="{ 
+                counters: [
+                    { current: 0, target: 500, suffix: '+', label: 'Campaign Aktif' },
+                    { current: 0, target: 12, suffix: 'k+', label: 'Donatur Setia' },
+                    { current: 0, target: 45, suffix: '+', label: 'Kota Terjangkau' },
+                    { current: 0, target: 200, suffix: 'k+', label: 'Penerima Manfaat' }
+                ],
+                startCounting() {
+                    this.counters.forEach(c => {
+                        let step = Math.ceil(c.target / 40);
+                        let timer = setInterval(() => {
+                            if (c.current < c.target) {
+                                c.current += step;
+                                if (c.current > c.target) c.current = c.target;
+                            } else {
+                                clearInterval(timer);
+                            }
+                        }, 40);
+                    });
+                }
+            }" x-intersect.once="startCounting()">
+                <template x-for="stat in counters">
+                    <div class="space-y-1">
+                        <p class="text-4xl font-black text-maroon-800" x-text="stat.current + stat.suffix">0</p>
+                        <p class="text-sm text-zinc-500 font-semibold tracking-wide uppercase" x-text="stat.label"></p>
+                    </div>
+                </template>
             </div>
         </div>
     </section>
@@ -198,7 +208,7 @@
                                         <span class="text-maroon-700 font-black">Rp {{ number_format($camp->collected_amount, 0, ',', '.') }}</span>
                                     </div>
                                     <div class="w-full bg-zinc-100 h-3 rounded-full overflow-hidden">
-                                        @php $percent = ($camp->collected_amount / $camp->target_amount) * 100; @endphp
+                                        @php $percent = $camp->target_amount > 0 ? ($camp->collected_amount / $camp->target_amount) * 100 : 0; @endphp
                                         <div class="{{ ($percent >= 100 || $camp->status === 'completed') ? 'bg-green-500' : 'bg-maroon-600' }} h-full rounded-full transition-all duration-1000" style="width: {{ min($percent, 100) }}%"></div>
                                     </div>
                                 </div>
