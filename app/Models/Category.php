@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    //
+    protected $fillable = [
+        'name',
+        'slug',
+        'icon_svg',
+        'is_featured'
+    ];
 }

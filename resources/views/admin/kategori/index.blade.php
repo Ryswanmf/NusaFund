@@ -37,11 +37,15 @@
                             <div class="w-12 h-12 rounded-2xl bg-maroon-50 flex items-center justify-center text-maroon-600">
                                 @if(str_contains($item->icon_svg, '<svg'))
                                     <div class="w-6 h-6 flex items-center justify-center">
-                                        {!! str_replace('<svg', '<svg class="w-6 h-6"', $item->icon_svg) !!}
+                                        {!! str_replace('<svg', '<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"', $item->icon_svg) !!}
                                     </div>
                                 @else
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        {!! $item->icon_svg !!}
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        @if(!str_contains($item->icon_svg, '<path'))
+                                            <path d="{{ $item->icon_svg }}"></path>
+                                        @else
+                                            {!! $item->icon_svg !!}
+                                        @endif
                                     </svg>
                                 @endif
                             </div>

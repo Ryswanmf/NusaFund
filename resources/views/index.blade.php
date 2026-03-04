@@ -124,16 +124,22 @@
                 <a href="{{ route('donasi.index', ['category' => $cat->name]) }}" class="bg-white p-8 rounded-[2rem] shadow-sm border border-zinc-100 flex flex-col items-center text-center hover:shadow-xl hover:border-maroon-200 transition-all duration-300 group hover:-translate-y-2">
                     <div class="w-16 h-16 bg-maroon-50 text-maroon-700 rounded-2xl flex items-center justify-center text-maroon-600 mb-5 group-hover:bg-maroon-600 group-hover:text-white transition-colors duration-300">
                         @if($cat->icon_svg)
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                @if(str_contains($cat->icon_svg, '<path') || str_contains($cat->icon_svg, '<svg'))
-                                    {!! $cat->icon_svg !!}
-                                @else
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="{!! $cat->icon_svg !!}"></path>
-                                @endif
-                            </svg>
+                            @if(str_contains($cat->icon_svg, '<svg'))
+                                <div class="w-8 h-8 flex items-center justify-center">
+                                    {!! str_replace('<svg', '<svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"', $cat->icon_svg) !!}
+                                </div>
+                            @else
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    @if(!str_contains($cat->icon_svg, '<path'))
+                                        <path d="{{ $cat->icon_svg }}"></path>
+                                    @else
+                                        {!! $cat->icon_svg !!}
+                                    @endif
+                                </svg>
+                            @endif
                         @else
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
                         @endif
                     </div>
