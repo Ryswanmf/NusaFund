@@ -31,7 +31,7 @@
     <nav class="bg-maroon-800 text-white shadow-sm sticky top-0 z-50 border-b border-maroon-700/50" 
          x-data="{ mobileMenuOpen: false }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
+            <div class="flex justify-between items-center h-16 lg:gap-12">
                 
                 <!-- Sisi Kiri: Logo & Search -->
                 <div class="flex items-center gap-8 flex-1">
@@ -59,7 +59,7 @@
                 </div>
 
                 <!-- Sisi Kanan: Menu Navigasi (Desktop) -->
-                <div class="hidden lg:flex items-center space-x-6 text-sm font-semibold">
+                <div class="hidden lg:flex items-center space-x-8 text-sm font-semibold tracking-wide">
                     <a href="/" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('/') ? 'text-amber-400' : '' }}">Beranda</a>
                     <a href="{{ route('donasi.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('donasi*') ? 'text-amber-400' : '' }}">Donasi</a>
                     <a href="{{ route('event.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('event*') ? 'text-amber-400' : '' }}">Event</a>
@@ -119,7 +119,7 @@
                             </div>
                         </div>
                     @else
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-5">
                             <a href="{{ route('login') }}" class="text-white hover:text-amber-400 transition px-3 py-2 text-sm font-bold">
                                 Masuk
                             </a>
@@ -150,7 +150,7 @@
              x-transition:enter-start="opacity-0 -translate-y-4"
              x-transition:enter-end="opacity-100 translate-y-0"
              class="lg:hidden bg-maroon-900 border-t border-maroon-700 overflow-hidden shadow-2xl">
-            <div class="px-4 pt-2 pb-6 space-y-2">
+            <div class="px-4 pt-2 pb-6 space-y-3">
                 <a href="/" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium {{ Request::is('/') ? 'text-amber-400 bg-maroon-800' : '' }}">Beranda</a>
                 <a href="{{ route('donasi.index') }}" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium {{ Request::is('donasi*') ? 'text-amber-400 bg-maroon-800' : '' }}">Donasi</a>
                 <a href="{{ route('event.index') }}" class="block px-4 py-3 rounded-xl hover:bg-maroon-800 hover:text-amber-400 transition font-medium {{ Request::is('event*') ? 'text-amber-400 bg-maroon-800' : '' }}">Event</a>
