@@ -28,21 +28,22 @@
 </head>
 <body class="bg-white font-sans text-zinc-900 antialiased">
     <!-- Navbar -->
-    <nav class="text-white shadow-sm sticky top-0 z-50 border-b transition-all duration-500" 
+    <nav class="text-white sticky top-0 z-50 transition-all duration-700 ease-in-out border-b" 
          x-data="{ mobileMenuOpen: false, scrolled: false }"
          @scroll.window="scrolled = (window.pageYOffset > 20 ? true : false)"
-         :class="scrolled ? 'bg-maroon-900/95 backdrop-blur-md border-maroon-700 shadow-xl' : 'bg-maroon-800 border-maroon-700/50'">
+         :class="scrolled ? 'bg-maroon-900/90 backdrop-blur-xl border-white/5 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.3)]' : 'bg-maroon-800 border-white/10'">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center transition-all duration-500 lg:gap-12"
+            <div class="flex justify-between items-center transition-all duration-700 ease-in-out lg:gap-12"
                  :class="scrolled ? 'h-14' : 'h-20'">
                 
                 <!-- Sisi Kiri: Logo & Search -->
                 <div class="flex items-center gap-8 flex-1">
-                    <a href="/" class="flex-shrink-0 flex items-center gap-2 group transition-all duration-300 hover:scale-105 active:scale-95 origin-left">
+                    <a href="/" class="flex-shrink-0 flex items-center gap-2 group transition-all duration-700 ease-in-out hover:scale-105 active:scale-95 origin-left"
+                       :class="scrolled ? 'scale-90' : 'scale-100'">
                         @if($settings && $settings->site_logo)
                             <img src="{{ asset('storage/' . $settings->site_logo) }}" alt="Logo" class="h-10 w-auto">
                         @else
-                            <span class="text-2xl font-bold tracking-tight text-white group-hover:text-amber-400 transition-all duration-300">Nusa<span class="text-amber-400 font-extrabold group-hover:text-white transition-all duration-300">Fund</span></span>
+                            <span class="text-2xl font-bold tracking-tight text-white group-hover:text-amber-400 transition-all duration-700">Nusa<span class="text-amber-400 font-extrabold group-hover:text-white transition-all duration-700">Fund</span></span>
                         @endif
                     </a>
                     
