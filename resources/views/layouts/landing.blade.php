@@ -64,12 +64,30 @@
 
                 <!-- Sisi Kanan: Menu Navigasi (Desktop) -->
                 <div class="hidden lg:flex items-center space-x-8 text-sm font-semibold tracking-wide">
-                    <a href="/" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('/') ? 'text-amber-400' : '' }}">Beranda</a>
-                    <a href="{{ route('donasi.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('donasi*') ? 'text-amber-400' : '' }}">Donasi</a>
-                    <a href="{{ route('event.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('event*') ? 'text-amber-400' : '' }}">Event</a>
-                    <a href="{{ route('zakat.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('zakat*') ? 'text-amber-400' : '' }}">Zakat</a>
-                    <a href="{{ route('fundraising.index') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('galang-dana*') ? 'text-amber-400' : '' }}">Galang Dana</a>
-                    <a href="{{ route('about') }}" class="text-maroon-100 hover:text-amber-400 transition {{ Request::is('tentang-kami') ? 'text-amber-400' : '' }}">Tentang Kami</a>
+                    <a href="/" class="relative py-2 text-maroon-100 hover:text-amber-400 transition-colors duration-300 group {{ Request::is('/') ? 'text-amber-400' : '' }}">
+                        Beranda
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-amber-400 transform origin-left transition-transform duration-300 {{ Request::is('/') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }}"></span>
+                    </a>
+                    <a href="{{ route('donasi.index') }}" class="relative py-2 text-maroon-100 hover:text-amber-400 transition-colors duration-300 group {{ Request::is('donasi*') ? 'text-amber-400' : '' }}">
+                        Donasi
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-amber-400 transform origin-left transition-transform duration-300 {{ Request::is('donasi*') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }}"></span>
+                    </a>
+                    <a href="{{ route('event.index') }}" class="relative py-2 text-maroon-100 hover:text-amber-400 transition-colors duration-300 group {{ Request::is('event*') ? 'text-amber-400' : '' }}">
+                        Event
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-amber-400 transform origin-left transition-transform duration-300 {{ Request::is('event*') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }}"></span>
+                    </a>
+                    <a href="{{ route('zakat.index') }}" class="relative py-2 text-maroon-100 hover:text-amber-400 transition-colors duration-300 group {{ Request::is('zakat*') ? 'text-amber-400' : '' }}">
+                        Zakat
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-amber-400 transform origin-left transition-transform duration-300 {{ Request::is('zakat*') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }}"></span>
+                    </a>
+                    <a href="{{ route('fundraising.index') }}" class="relative py-2 text-maroon-100 hover:text-amber-400 transition-colors duration-300 group {{ Request::is('galang-dana*') ? 'text-amber-400' : '' }}">
+                        Galang Dana
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-amber-400 transform origin-left transition-transform duration-300 {{ Request::is('galang-dana*') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }}"></span>
+                    </a>
+                    <a href="{{ route('about') }}" class="relative py-2 text-maroon-100 hover:text-amber-400 transition-colors duration-300 group {{ Request::is('tentang-kami') ? 'text-amber-400' : '' }}">
+                        Tentang Kami
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-amber-400 transform origin-left transition-transform duration-300 {{ Request::is('tentang-kami') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }}"></span>
+                    </a>
                     
                     @auth
                         <!-- User Dropdown -->
