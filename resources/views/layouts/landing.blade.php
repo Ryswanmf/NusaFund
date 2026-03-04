@@ -31,7 +31,7 @@
     <nav class="text-white sticky top-0 z-50 transition-all duration-700 ease-in-out border-b" 
          x-data="{ mobileMenuOpen: false, scrolled: false }"
          @scroll.window="scrolled = (window.pageYOffset > 20 ? true : false)"
-         :class="scrolled ? 'bg-maroon-900/90 backdrop-blur-xl border-white/5 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.3)]' : 'bg-maroon-800 border-white/10'">
+         :class="scrolled ? 'bg-maroon-900 border-white/5 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.3)]' : 'bg-maroon-800 border-white/10'">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center transition-all duration-700 ease-in-out lg:gap-12"
                  :class="scrolled ? 'h-14' : 'h-20'">
