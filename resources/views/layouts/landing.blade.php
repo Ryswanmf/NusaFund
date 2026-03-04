@@ -28,10 +28,13 @@
 </head>
 <body class="bg-white font-sans text-zinc-900 antialiased">
     <!-- Navbar -->
-    <nav class="bg-maroon-800 text-white shadow-sm sticky top-0 z-50 border-b border-maroon-700/50" 
-         x-data="{ mobileMenuOpen: false }">
+    <nav class="text-white shadow-sm sticky top-0 z-50 border-b transition-all duration-500" 
+         x-data="{ mobileMenuOpen: false, scrolled: false }"
+         @scroll.window="scrolled = (window.pageYOffset > 20 ? true : false)"
+         :class="scrolled ? 'bg-maroon-900/95 backdrop-blur-md border-maroon-700 shadow-xl' : 'bg-maroon-800 border-maroon-700/50'">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16 lg:gap-12">
+            <div class="flex justify-between items-center transition-all duration-500 lg:gap-12"
+                 :class="scrolled ? 'h-14' : 'h-20'">
                 
                 <!-- Sisi Kiri: Logo & Search -->
                 <div class="flex items-center gap-8 flex-1">
