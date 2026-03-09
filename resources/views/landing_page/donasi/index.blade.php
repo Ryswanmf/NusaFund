@@ -112,6 +112,13 @@
                 </div>
                 @endforelse
             </div>
+
+            <!-- Pagination Section -->
+            @if($campaigns->hasPages())
+                <div class="mt-20">
+                    {{ $campaigns->links('vendor.pagination.premium') }}
+                </div>
+            @endif
         </div>
     </div>
 @endsection

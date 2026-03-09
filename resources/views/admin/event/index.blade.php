@@ -97,7 +97,7 @@
             </table>
         </div>
         <div class="px-10 py-6 bg-zinc-50/30">
-            {{ $events->links() }}
+            {{ $events->links('vendor.pagination.premium') }}
         </div>
     </div>
 </div>

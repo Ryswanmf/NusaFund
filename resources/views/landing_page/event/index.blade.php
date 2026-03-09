@@ -92,6 +92,13 @@
                 </div>
                 @endforelse
             </div>
+
+            <!-- Pagination Section -->
+            @if($events->hasPages())
+                <div class="mt-20">
+                    {{ $events->links('vendor.pagination.premium') }}
+                </div>
+            @endif
         </div>
     </div>
 @endsection

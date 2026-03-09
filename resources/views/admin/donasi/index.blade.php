@@ -88,7 +88,7 @@
             </table>
         </div>
         <div class="px-10 py-6 bg-zinc-50/30">
-            {{ $campaigns->links() }}
+            {{ $campaigns->links('vendor.pagination.premium') }}
         </div>
     </div>
 </div>

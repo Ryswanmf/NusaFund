@@ -144,7 +144,7 @@ class CampaignController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $campaigns = $query->get();
+        $campaigns = $query->paginate(9)->withQueryString();
         $categories = \App\Models\Category::all();
 
         return view('landing_page.donasi.index', compact('campaigns', 'categories'));

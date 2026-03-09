@@ -113,7 +113,7 @@ class EventController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $events = $query->get();
+        $events = $query->paginate(9)->withQueryString();
         $categories = \App\Models\Category::all();
 
         return view('landing_page.event.index', compact('events', 'categories'));
