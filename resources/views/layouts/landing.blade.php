@@ -434,6 +434,6 @@
     </footer>
 
     @stack('scripts')
-    <x-toast />
+    @include('components.toast')
 </body>
 </html>

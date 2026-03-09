@@ -18,29 +18,45 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans text-zinc-900 antialiased bg-zinc-50">
-    <div class="flex h-screen overflow-hidden" x-data="{ sidebarOpen: false }">
+    <div class="flex h-screen overflow-hidden bg-zinc-50" x-data="{ sidebarOpen: false }">
         
+        <!-- Sidebar Overlay (Mobile) -->
+        <div x-show="sidebarOpen" 
+             x-transition:enter="transition-opacity ease-linear duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition-opacity ease-linear duration-300"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @click="sidebarOpen = false"
+             class="fixed inset-0 z-40 bg-zinc-900/50 lg:hidden" 
+             aria-hidden="true">
+        </div>
+
         <!-- Sidebar -->
         <aside class="fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-zinc-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0"
                :class="{'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen}">
             
             <div class="flex flex-col h-full">
                 <!-- Logo Area -->
-                <div class="p-8">
+                <div class="p-6 lg:p-8 flex items-center justify-between">
                     <a href="/" class="flex items-center gap-2 group transition">
                         @php $settings = \App\Models\Setting::first(); @endphp
                         @if($settings && $settings->site_logo)
-                            <img src="{{ asset('storage/' . $settings->site_logo) }}" alt="Logo" class="h-8 w-auto">
+                            <img src="{{ asset('storage/' . $settings->site_logo) }}" alt="Logo" class="h-7 lg:h-8 w-auto">
                         @else
-                            <span class="text-2xl font-black text-maroon-800 tracking-tighter">Nusa<span class="text-amber-500">Fund</span></span>
+                            <span class="text-xl lg:text-2xl font-black text-maroon-800 tracking-tighter">Nusa<span class="text-amber-500">Fund</span></span>
                         @endif
-                        <span class="bg-maroon-50 text-maroon-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase ml-2">Admin</span>
+                        <span class="bg-maroon-50 text-maroon-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">Admin</span>
                     </a>
+                    <button @click="sidebarOpen = false" class="lg:hidden p-2 text-zinc-400 hover:text-zinc-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
                 </div>
 
                 <!-- Nav Links -->
-                <nav class="flex-1 px-6 space-y-2 overflow-y-auto pb-10">
-                    <div class="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mb-4 px-2">Menu Utama</div>
+                <nav class="flex-1 px-4 lg:px-6 space-y-1 lg:space-y-2 overflow-y-auto pb-10 custom-scrollbar">
+                    <div class="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mt-4 mb-2 lg:mb-4 px-4">Menu Utama</div>
                     
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 {{ Request::routeIs('admin.dashboard') ? 'bg-maroon-800 text-white shadow-xl shadow-maroon-900/20' : 'text-zinc-500 hover:bg-maroon-50 hover:text-maroon-700' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
@@ -183,6 +199,6 @@
             </main>
         </div>
     </div>
-    <x-toast />
+    @include('components.toast')
 </body>
 </html>
