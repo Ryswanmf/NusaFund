@@ -11,22 +11,59 @@
     
     <meta property="og:title" content="{{ isset($meta) ? $meta['title'] : 'NusaFund - Kebaikan untuk Semua' }}">
     <meta property="og:description" content="{{ isset($meta) ? $meta['description'] : 'Bantu sesama melalui berbagai program kemanusiaan di NusaFund.' }}">
-    <meta property="og:image" content="{{ isset($meta) ? $meta['image'] : asset('images/nusafac.png') }}">
+    <meta property="og:image" content="{{ isset($meta) ? $meta['image'] : asset('images/logo.png') }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    
+
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/nusafac.png') }}">
-    
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
+    <style>
+        #page-loader {
+            transition: opacity 0.3s ease-out, visibility 0.3s;
+        }
+        .loader-progress {
+            width: 0;
+            height: 3px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10000;
+            background: linear-gradient(to right, #800000, #b91c1c);
+            box-shadow: 0 0 10px rgba(128, 0, 0, 0.5);
+            transition: width 0.4s ease-out;
+        }
+        @keyframes loading-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+        }
+        .animate-loader-pulse {
+            animation: loading-pulse 1.5s ease-in-out infinite;
+        }
+    </style>
 </head>
 <body class="bg-white font-sans text-zinc-900 antialiased">
+    <!-- Page Loader -->
+    <div id="page-loader" class="fixed inset-0 z-[9999] flex items-center justify-center bg-white/90 backdrop-blur-sm">
+        <div class="loader-progress" id="loader-progress"></div>
+        <div class="flex flex-col items-center gap-5 animate-loader-pulse">
+            <div class="relative">
+                <div class="w-16 h-16 border-4 border-maroon-100 rounded-2xl rotate-45"></div>
+                <div class="absolute inset-0 w-16 h-16 border-t-4 border-maroon-800 rounded-2xl rotate-45 animate-spin"></div>
+            </div>
+            <div class="flex flex-col items-center">
+                <span class="text-xl font-black tracking-tighter text-maroon-900">Nusa<span class="text-amber-500">Fund</span></span>
+                <p class="text-[9px] font-black uppercase tracking-[0.4em] text-maroon-800/40 mt-1">Sedang Memuat</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Navbar -->
     <nav class="text-white sticky top-0 z-50 transition-all duration-700 ease-in-out border-b" 
          x-data="{ mobileMenuOpen: false, scrolled: false }"
@@ -435,5 +472,66 @@
 
     @stack('scripts')
     @include('components.toast')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loader = document.getElementById('page-loader');
+            const progress = document.getElementById('loader-progress');
+            
+            // Simulasikan progress bar cepat
+            if (progress) {
+                progress.style.width = '40%';
+                setTimeout(() => {
+                    progress.style.width = '100%';
+                }, 100);
+            }
+
+            // Sembunyikan loader setelah halaman dimuat sepenuhnya
+            window.addEventListener('load', function() {
+                setTimeout(() => {
+                    if (loader) {
+                        loader.style.opacity = '0';
+                        loader.style.visibility = 'hidden';
+                    }
+                }, 200);
+            });
+
+            // Munculkan kembali loader saat mengklik tautan (navigasi keluar)
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    
+                    // Jangan aktifkan jika: target blank, hash link, atau javascript void
+                    if (
+                        href && 
+                        !href.startsWith('#') && 
+                        !href.startsWith('javascript') && 
+                        this.target !== '_blank' &&
+                        !e.ctrlKey && 
+                        !e.metaKey
+                    ) {
+                        if (loader) {
+                            loader.style.opacity = '1';
+                            loader.style.visibility = 'visible';
+                            if (progress) progress.style.width = '0%';
+                            setTimeout(() => {
+                                if (progress) progress.style.width = '70%';
+                            }, 10);
+                        }
+                    }
+                });
+            });
+
+            // Tangani tombol 'Back' browser
+            window.addEventListener('pageshow', function(event) {
+                if (event.persisted) {
+                    if (loader) {
+                        loader.style.opacity = '0';
+                        loader.style.visibility = 'hidden';
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
